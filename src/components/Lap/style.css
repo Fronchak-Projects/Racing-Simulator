@@ -1,0 +1,21 @@
+.lap-label {
+    width: 75px;
+}
+
+#speedway-table .tr-zebra {
+    height: 10px;
+}
+
+#speedway-table .tr-zebra td {
+    padding: 0;
+}
+
+#speedway-table .tr-zebra .td-zebra {
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 15px,
+        red 15px,
+        red 30px
+    ); 
+}
