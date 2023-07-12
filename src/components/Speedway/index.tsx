@@ -10,10 +10,16 @@ type Props = {
 }
 
 const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
-
+    console.log('Speedway render')
     return (
         <div className="table-responsive">
             <table className="table table-borderless align-middle" id="speedway-table">
+                <thead>
+                    <tr>
+                        <th scope='col' className="lap-head">#LAP</th>
+                        { new Array(lapSize).fill(1).map((_, i) => <td scope="col" className="street-head" key={i}>#</td>) }
+                    </tr>
+                </thead>
                 <tbody>
                     { new Array(numberOfLaps).fill(1).map((_, index) => (
                         <React.Fragment key={index}>

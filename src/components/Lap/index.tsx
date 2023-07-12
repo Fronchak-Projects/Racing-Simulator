@@ -19,10 +19,10 @@ const Lap = ({ lapNumber, size, competitors }: Props) => {
                 <th scope="row" className="lap-label border-none">Lap { lapNumber }</th>
                 { new Array(size).fill(1).map((_, index) => {
                     const length = (size * (lapNumber - 1)) + 1 + index;
-                    const competitor = competitors.find((competitor) => competitor.actualPosition == length);
+                    const competitor = competitors.find((competitor) => competitor.actualPosition === length);
                     return (
                         <td 
-                            className="table-dark text-center p-0" 
+                            className="table-dark text-center p-0 td-lap" 
                             key={index}
                         >
                             { competitor && <i 

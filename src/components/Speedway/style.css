@@ -1,3 +1,11 @@
 .row-space {
     height: 20px;
 }
+
+#speedway-table thead .lap-head {
+    width: 75px;
+}
+
+#speedway-table thead .street-head {
+    min-width: 50px;
+}
