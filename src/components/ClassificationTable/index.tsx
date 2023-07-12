@@ -22,8 +22,8 @@ const ClassificationTable = ({ descriptionHeader, classifications }: Props) => {
 
             </thead>
             <tbody className="table-group-divider">
-                { classifications.sort((a, b) => a.classification - b.classification).map((classification) => (
-                    <tr>
+                { classifications.sort((a, b) => a.classification - b.classification).map((classification, i) => (
+                    <tr key={i}>
                         <td className="text-center">
                             { classification.classification < 4 ? 
                                 <TrophyIcon position={classification.classification as 1 | 2 | 3} /> 

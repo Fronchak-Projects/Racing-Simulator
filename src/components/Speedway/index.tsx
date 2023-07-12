@@ -10,7 +10,6 @@ type Props = {
 }
 
 const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
-    console.log('Speedway render')
     return (
         <div className="table-responsive">
             <table className="table table-borderless align-middle" id="speedway-table">
@@ -28,7 +27,6 @@ const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
                             <tr className="row-space"></tr>
                         </React.Fragment>
                     )) }
-
                 </tbody>
             </table>
         </div>
