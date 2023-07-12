@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import DriverType from "../../types/DriverType";
 import CompetitorType from '../../types/CompetitorType';
 import Speedway from '../Speedway';
 import { random } from '../../utils/MathUtils';
 import CarCardsContainer from '../CarCardsContainer';
+import ClassificationTable from '../ClassificationTable';
+import CarIcon from '../CarIcon';
 
 type Props = {
     numberOfLaps: number;
@@ -129,32 +131,21 @@ const Racing = ({ numberOfLaps, lapSize }: Props) => {
                 competitors={competitors}
             /> }
             { someoneFinished && (
-                <table className="table table-dark">
-                    <thead className="table-primary">
-                        <tr>
-                            <th scope="col">Classificação</th>
-                            <th scope="col">Driver</th>
-                            <th scope="col">Pontuação</th>
-                        </tr>
-
-                    </thead>
-                    <tbody>
-                        { competitors.sort((a, b) => a.racingPosition! - b.racingPosition!).map((competitor) => (
-                            <tr>
-                                <td>
-                                    { competitor.racingPosition! < 4 ? 
-                                        <i 
-                                            className={`fa-solid fa-trophy ${competitor.racingPosition! == 1 ? 'gold-color' : competitor.racingPosition! == 2 ? 'silver-color' : 'bronze-color'}`}    
-                                        ></i> 
-                                        : 
-                                        competitor.racingPosition }
-                                </td>
-                                <td>{ competitor.driver.name }</td>
-                                <td>-</td>
-                            </tr>
-                        )) }
-                    </tbody>
-                </table>
+                <ClassificationTable 
+                    descriptionHeader='Driver'
+                    classifications={
+                        competitors.filter((c) => c.status === 'FINISHED')
+                        .sort((a, b) => a.racingPosition! - b.racingPosition!)
+                        .map((c) => ({
+                            classification: c.racingPosition!,
+                            description: <div className="d-flex align-center">
+                                <CarIcon color={c.driver.color} />
+                                <span className="mx-4">{ c.driver.name }</span>
+                            </div>,
+                            pontuation: 10   
+                        }))
+                    }
+                />
             ) }
             
         </div>

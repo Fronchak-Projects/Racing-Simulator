@@ -1,4 +1,5 @@
 import CompetitorType from '../../types/CompetitorType';
+import CarIcon from '../CarIcon';
 import './style.css';
 
 type Props = {
@@ -25,13 +26,7 @@ const Lap = ({ lapNumber, size, competitors }: Props) => {
                             className="table-dark text-center p-0 td-lap" 
                             key={index}
                         >
-                            { competitor && <i 
-                                className="fa-solid fa-car-side"
-                                style={{
-                                    color: competitor.driver.color
-                                }}
-                            ></i>     
-                            }
+                            { competitor && <CarIcon color={competitor.driver.color} /> }
                         </td>
                     )
                 } ) }
