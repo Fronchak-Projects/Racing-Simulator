@@ -3,7 +3,7 @@
 }
 
 #speedway-table .tr-zebra {
-    height: 10px;
+    height: 6px;
 }
 
 #speedway-table .tr-zebra td {
@@ -14,8 +14,13 @@
     background-image: repeating-linear-gradient(
         -45deg,
         transparent,
-        transparent 15px,
-        red 15px,
-        red 30px
+        transparent 10px,
+        red 10px,
+        red 20px
     ); 
+}
+
+td i {
+    font-size: 1.8em;
+    
 }

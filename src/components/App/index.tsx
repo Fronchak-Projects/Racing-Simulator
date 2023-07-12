@@ -1,10 +1,10 @@
-import Speedway from "../Speedway";
+import Racing from "../Racing";
 
 const App =() => {
 
   return (
     <div className="container-fluid py-4">
-      <Speedway lapSize={10} numberOfLaps={6} />
+      <Racing lapSize={10} numberOfLaps={6} />
     </div>
   );
 }

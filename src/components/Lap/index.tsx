@@ -1,26 +1,45 @@
+import CompetitorType from '../../types/CompetitorType';
 import './style.css';
 
 type Props = {
     lapNumber: number;
     size: number;
+    competitors: Array<CompetitorType>
 }
 
-const Lap = ({ lapNumber, size }: Props) => {
+const Lap = ({ lapNumber, size, competitors }: Props) => {
     
     return (
         <>
-        <tr className="tr-zebra">
-            <td></td>
-            <td colSpan={size} className="td-zebra"></td>
-        </tr>
-        <tr>
-            <th scope="row" className="lap-label border-none">Lap { lapNumber }</th>
-            { new Array(size).fill(1).map((_, index) => <td className="table-dark" key={index}/> ) }
-        </tr>
-        <tr className="tr-zebra">
-            <td></td>
-            <td colSpan={size} className="td-zebra"></td>
-        </tr>
+            <tr className="tr-zebra">
+                <td></td>
+                <td colSpan={size} className="td-zebra"></td>
+            </tr>
+            <tr>
+                <th scope="row" className="lap-label border-none">Lap { lapNumber }</th>
+                { new Array(size).fill(1).map((_, index) => {
+                    const length = (size * (lapNumber - 1)) + 1 + index;
+                    const competitor = competitors.find((competitor) => competitor.actualPosition == length);
+                    return (
+                        <td 
+                            className="table-dark text-center p-0" 
+                            key={index}
+                        >
+                            { competitor && <i 
+                                className="fa-solid fa-car-side"
+                                style={{
+                                    color: competitor.driver.color
+                                }}
+                            ></i>     
+                            }
+                        </td>
+                    )
+                } ) }
+            </tr>
+            <tr className="tr-zebra">
+                <td></td>
+                <td colSpan={size} className="td-zebra"></td>
+            </tr>
         </>
     );
 }
