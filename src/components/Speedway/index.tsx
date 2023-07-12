@@ -16,8 +16,8 @@ const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
             <table className="table table-borderless align-middle" id="speedway-table">
                 <thead>
                     <tr>
-                        <th scope='col' className="lap-head">#LAP</th>
-                        { new Array(lapSize).fill(1).map((_, i) => <td scope="col" className="street-head" key={i}>#</td>) }
+                        <th scope='col' className="lap-head"></th>
+                        { new Array(lapSize).fill(1).map((_, i) => <td scope="col" className="street-head" key={i}></td>) }
                     </tr>
                 </thead>
                 <tbody>

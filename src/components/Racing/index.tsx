@@ -3,6 +3,7 @@ import DriverType from "../../types/DriverType";
 import CompetitorType from '../../types/CompetitorType';
 import Speedway from '../Speedway';
 import { random } from '../../utils/MathUtils';
+import CarCardsContainer from '../CarCardsContainer';
 
 type Props = {
     numberOfLaps: number;
@@ -49,6 +50,7 @@ const Racing = ({ numberOfLaps, lapSize }: Props) => {
 
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [hasFinished, setHasFinished] = useState<boolean>(false);
+    const [someoneFinished, setSomeoneFinished] = useState<boolean>(false);
     const [competitors, setCompetitors] = useState<Array<CompetitorType>>([
         {
             driver: driver1,
@@ -98,20 +100,63 @@ const Racing = ({ numberOfLaps, lapSize }: Props) => {
         const ciclo = setInterval(() => {
             const competitorsAux = competitors;
             competitorsAux.forEach((competitor) => {
-                competitor.actualPosition = competitor.actualPosition + random(1, 6);
+                if(competitor.status === 'RUNNING') {
+                    competitor.actualPosition = competitor.actualPosition + random(1, 6);
+                    if(competitor.actualPosition > lapSize * numberOfLaps) {
+                        const position = competitorsAux.filter((c) => c.status === 'FINISHED').length + 1;
+                        competitor.racingPosition = position;
+                        competitor.status = 'FINISHED';
+                        if(!someoneFinished) setSomeoneFinished(true);
+                    }
+                }
             })
             setCompetitors([...competitorsAux]);
+            if(competitors.every((c) => c.status === 'FINISHED')) {
+                setHasFinished(true);
+                clearInterval(ciclo);
+            }
         }, 400);
     }
 
     return (
         <div>
-            <button className="btn btn-primary mb-3" onClick={initRace}>Start race</button>
-            <Speedway  
+            <h1>Competitors:</h1>
+            <CarCardsContainer drivers={competitors.map((c) => c.driver)} />
+            <button className="btn btn-primary my-3" onClick={initRace}>Start race</button>
+            { !hasFinished && <Speedway  
                 lapSize={lapSize}
                 numberOfLaps={numberOfLaps}
                 competitors={competitors}
-            />
+            /> }
+            { someoneFinished && (
+                <table className="table table-dark">
+                    <thead className="table-primary">
+                        <tr>
+                            <th scope="col">Classificação</th>
+                            <th scope="col">Driver</th>
+                            <th scope="col">Pontuação</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        { competitors.sort((a, b) => a.racingPosition! - b.racingPosition!).map((competitor) => (
+                            <tr>
+                                <td>
+                                    { competitor.racingPosition! < 4 ? 
+                                        <i 
+                                            className={`fa-solid fa-trophy ${competitor.racingPosition! == 1 ? 'gold-color' : competitor.racingPosition! == 2 ? 'silver-color' : 'bronze-color'}`}    
+                                        ></i> 
+                                        : 
+                                        competitor.racingPosition }
+                                </td>
+                                <td>{ competitor.driver.name }</td>
+                                <td>-</td>
+                            </tr>
+                        )) }
+                    </tbody>
+                </table>
+            ) }
+            
         </div>
 
     )

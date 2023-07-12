@@ -4,7 +4,7 @@ const App =() => {
 
   return (
     <div className="container-fluid py-4">
-      <Racing lapSize={20} numberOfLaps={10} />
+      <Racing lapSize={8} numberOfLaps={5} />
     </div>
   );
 }

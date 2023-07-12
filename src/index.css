@@ -1,0 +1,17 @@
+:root {
+    --gold-color: #FFD700;
+    --silver-color: #C0C0C0;
+    --bronze-color: #cd7f32;
+}
+
+.gold-color {
+    color: var(--gold-color);
+}
+
+.silver-color {
+    color: var(--silver-color);
+}
+
+.bronze-color {
+    color: var(--bronze-color);
+}
