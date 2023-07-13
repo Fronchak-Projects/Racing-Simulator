@@ -7,37 +7,50 @@ import CarCardsContainer from '../CarCardsContainer';
 import ClassificationTable from '../ClassificationTable';
 import CarIcon from '../CarIcon';
 import './style.css';
+import TeamType from '../../types/TeamType';
+import TeamRacingCompetitor from '../../types/TeamRacingCompetitorType';
 
 type Props = {
     numberOfLaps: number;
     lapSize: number;
-    drivers: Array<DriverType>
-    systemPoints: Array<number>
+    teams: Array<TeamType>;
+    systemPoints: Array<number>;
 }
 
-const Racing = ({ numberOfLaps, lapSize, drivers, systemPoints }: Props) => {
+const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
 
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [hasFinished, setHasFinished] = useState<boolean>(false);
     const [someoneFinished, setSomeoneFinished] = useState<boolean>(false);
     const [competitors, setCompetitors] = useState<Array<CompetitorType>>([]);
+    const [teamCompetitors, setTeamCompetitors] = useState<Array<TeamRacingCompetitor>>([]);
     const isFirstRender = useRef<boolean>(true);
 
     useEffect(() => {
         if(isFirstRender.current) {
-            setCompetitors(drivers.map((driver) => ({
-                driver,
-                actualPosition: 0,
-                lastPosition: 0,
-                status: 'RUNNING',
-                racingPosition: undefined
-            })));
+            const competitorsAux: Array<CompetitorType> = teams
+                .reduce((prev: Array<DriverType>, curr) => {
+                    return [...prev, ...curr.drivers]
+                }, [])
+                .map((driver) => ({
+                    driver,
+                    actualPosition: 0,
+                    lastPosition: 0,
+                    status: 'RUNNING',
+                    racingPosition: undefined
+                }))
+            setCompetitors(competitorsAux);
+            setTeamCompetitors(teams.map((team) => ({
+                points: 0,
+                team,
+                position: undefined
+            })))
         }
 
         return () => {
             isFirstRender.current = false;
         }
-    }, [drivers]);
+    }, [teams]);
 
     const initRace = () => {
         setHasStarted(true);
@@ -80,13 +93,28 @@ const Racing = ({ numberOfLaps, lapSize, drivers, systemPoints }: Props) => {
             if(competitors.every((c) => c.status === 'FINISHED')) {
                 setHasFinished(true);
                 clearInterval(ciclo);
+                const teamCompetitorsAux = teamCompetitors;
+                teamCompetitorsAux.forEach((team) => {
+                    team.points = competitors
+                        .filter((driverComp) => team.team.drivers.includes(driverComp.driver))
+                        .reduce((prev, curr) => {
+                            const position = curr.racingPosition!;
+                            if(position <= systemPoints.length) {
+                                return prev + systemPoints[position - 1];
+                            }
+                            return prev;
+                        }, 0);
+                });
+                teamCompetitorsAux.sort((a, b) => b.points - a.points).forEach((c, i) => c.position = i + 1);
+                console.log(teamCompetitorsAux)
+                setTeamCompetitors(teamCompetitorsAux);
             }
         }, 1000);
     }
 
     const carCardsContainerMemo = useMemo(() => {
-        return <CarCardsContainer drivers={drivers} />;
-    }, [drivers]);
+        return <CarCardsContainer drivers={teams.reduce((prev: Array<DriverType>, curr) => [...prev, ...curr.drivers], [])} />;
+    }, [teams]);
 
     return (
         <div>
@@ -107,7 +135,7 @@ const Racing = ({ numberOfLaps, lapSize, drivers, systemPoints }: Props) => {
                         .map((c) => ({
                             classification: c.racingPosition!,
                             description: <div className="d-flex align-center">
-                                <CarIcon color={c.driver.color} />
+                                <CarIcon color={c.driver.team.color} />
                                 <span className="mx-4">{ c.driver.name }</span>
                             </div>,
                             pontuation: c.racingPosition! <= systemPoints.length ? systemPoints[c.racingPosition! - 1] : undefined
@@ -115,6 +143,18 @@ const Racing = ({ numberOfLaps, lapSize, drivers, systemPoints }: Props) => {
                     }
                 />
             ) }
+            { hasFinished && <div className="mt-3">
+                    <ClassificationTable 
+                        descriptionHeader='Team'
+                        classifications={
+                            teamCompetitors.map((team) => ({
+                                classification: team.position!,
+                                description: team.team.name,
+                                pontuation: team.points
+                            }))
+                        }
+                    />
+            </div> }
             
         </div>
 

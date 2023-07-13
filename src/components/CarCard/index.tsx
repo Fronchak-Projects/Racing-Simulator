@@ -10,7 +10,7 @@ const CarCard = ({ driver }: Props) => {
 
     return (
         <div className="text-center px-2 py-3 car-card">
-            <CarIcon color={driver.color} />
+            <CarIcon color={driver.team.color} />
             <span className="fw-bold d-block">{ driver.name }</span>
         </div>
     );

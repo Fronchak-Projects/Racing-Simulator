@@ -1,7 +1,9 @@
+import TeamType from "./TeamType";
+
 type DriverType = {
     id: number;
-    color: string;
     name: string;
+    team: TeamType
 }
 
 export default DriverType;

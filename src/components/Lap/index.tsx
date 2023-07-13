@@ -26,7 +26,7 @@ const Lap = ({ lapNumber, size, competitors }: Props) => {
                             className="table-dark text-center p-0 td-lap" 
                             key={index}
                         >
-                            { competitor && <CarIcon color={competitor.driver.color} /> }
+                            { competitor && <CarIcon color={competitor.driver.team.color} /> }
                         </td>
                     )
                 } ) }
