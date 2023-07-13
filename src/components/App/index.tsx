@@ -78,8 +78,8 @@ const App =() => {
   return (
     <div className="container-fluid py-4">
       <Racing 
-        lapSize={25} 
-        numberOfLaps={10} 
+        lapSize={13} 
+        numberOfLaps={1} 
         drivers={[driver1, driver2, driver3, driver4, driver5, driver6,
                   driver7, driver8, driver9, driver10, driver11, driver12]} 
         systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  

@@ -43,23 +43,45 @@ const Racing = ({ numberOfLaps, lapSize, drivers, systemPoints }: Props) => {
         setHasStarted(true);
         const ciclo = setInterval(() => {
             const competitorsAux = competitors;
+            const finishingCompetitors: Array<CompetitorType> = [];
             competitorsAux.forEach((competitor) => {
                 if(competitor.status === 'RUNNING') {
+                    competitor.lastPosition = competitor.actualPosition;
                     competitor.actualPosition = competitor.actualPosition + playDice() + playDice();
                     if(competitor.actualPosition > lapSize * numberOfLaps) {
-                        const position = competitorsAux.filter((c) => c.status === 'FINISHED').length + 1;
-                        competitor.racingPosition = position;
-                        competitor.status = 'FINISHED';
                         if(!someoneFinished) setSomeoneFinished(true);
+                        finishingCompetitors.push(competitor);
                     }
                 }
-            })
+            });
+
+            if(finishingCompetitors.length >= 1) {
+                const position = competitorsAux.filter((c) => c.status === 'FINISHED').length + 1;
+                finishingCompetitors.sort((a, b) => a.lastPosition == b.lastPosition ? a.actualPosition - b.actualPosition : a.lastPosition - b.lastPosition);
+
+                let lastPosition = 0;
+                let actualPosition = 0;
+                let referencePosition = 0;
+                finishingCompetitors.forEach((c, i) => {
+                    c.status = 'FINISHED';
+                    if(c.lastPosition == lastPosition && c.actualPosition == actualPosition) {
+                        c.racingPosition = referencePosition;
+                    }
+                    else {
+                        c.racingPosition = position + i;
+                        lastPosition = c.lastPosition;
+                        actualPosition = c.actualPosition;
+                        referencePosition = c.racingPosition!;
+                    }
+
+                })
+            }
             setCompetitors([...competitorsAux]);
             if(competitors.every((c) => c.status === 'FINISHED')) {
                 setHasFinished(true);
                 clearInterval(ciclo);
             }
-        }, 200);
+        }, 1000);
     }
 
     const carCardsContainerMemo = useMemo(() => {
