@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Driver from "../../types/Driver";
 import RacingDriver from '../../types/RacingDriver';
 import Speedway from '../Speedway';
@@ -6,9 +6,9 @@ import playDice from '../../utils/Dice';
 import CarCardsContainer from '../CarCardsContainer';
 import ClassificationTable from '../ClassificationTable';
 import CarIcon from '../CarIcon';
-import './style.css';
 import Team from '../../types/Team';
 import RacingTeam from '../../types/RacingTeam';
+import './style.css';
 
 type Props = {
     numberOfLaps: number;
@@ -20,37 +20,24 @@ type Props = {
 const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
 
     const [hasStarted, setHasStarted] = useState<boolean>(false);
-    const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>([]);
-    const [racingTeams, setRacingTeams] = useState<Array<RacingTeam>>([]);
-    const isFirstRender = useRef<boolean>(true);
-    const speedWayLength = lapSize * numberOfLaps;
-    const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.status === 'FINISHED');
-    const hasFinished = racingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED');
-
-    useEffect(() => {
-        if(isFirstRender.current) {
-            const initialRacingDrives: Array<RacingDriver> = teams
-                .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
-                .map((driver) => ({
-                    driver,
-                    actualPosition: 0,
-                    lastPosition: 0,
-                    status: 'RUNNING',
-                    racingPosition: undefined,
-                    points: 0
-                }));
-            setRacingDrivers(initialRacingDrives)
-            setRacingTeams(teams.map((team) => ({
+    const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>(() => teams
+            .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
+            .map((driver) => ({
+                driver,
+                actualPosition: 0,
+                lastPosition: 0,
+                status: 'RUNNING',
+                racingPosition: undefined,
+                points: 0
+            })));
+    const [racingTeams, setRacingTeams] = useState<Array<RacingTeam>>(() => teams.map((team) => ({
                 points: 0,
                 team,
                 position: undefined
             })));
-        }
-
-        return () => {
-            isFirstRender.current = false;
-        }
-    }, [teams]);
+    const speedWayLength = lapSize * numberOfLaps;
+    const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.status === 'FINISHED');
+    const hasFinished = racingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED');
 
     const initRace = () => {
         setHasStarted(true);
@@ -148,35 +135,53 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                 competitors={racingDrivers}
             /> }
             { someoneFinished && (
-                <ClassificationTable 
-                    descriptionHeader='Driver'
-                    classifications={
-                        racingDrivers.filter((racingDriver) => racingDriver.status === 'FINISHED')
-                        .sort((a, b) => a.racingPosition! - b.racingPosition!)
-                        .map((racingDriver) => ({
-                            classification: racingDriver.racingPosition!,
-                            description: <div className="d-flex align-center">
-                                <CarIcon color={racingDriver.driver.team.color} />
-                                <span className="mx-4">{ racingDriver.driver.name }</span>
-                            </div>,
-                            pontuation: racingDriver.points
-                        }))
-                    }
-                />
+                <div className="container-fluid">
+                    <div className='row'>
+                        <div className={hasFinished ? 'col-12 col-lg-6' : 'col-12'}>
+                            <h2 className="mb-2 text-center fs-1 fw-bold">Drivers</h2>
+                            <ClassificationTable 
+                                descriptionHeader='Driver'
+                                classifications={
+                                    racingDrivers.filter((racingDriver) => racingDriver.status === 'FINISHED')
+                                    .sort((a, b) => a.racingPosition! - b.racingPosition!)
+                                    .map((racingDriver) => ({
+                                        classification: racingDriver.racingPosition!,
+                                        description: <div className="d-flex align-center">
+                                            <CarIcon color={racingDriver.driver.team.color} />
+                                            <span 
+                                                style={{
+                                                    color: racingDriver.driver.team.color
+                                                }}
+                                                className="mx-4">{ racingDriver.driver.name }
+                                            </span>
+                                        </div>,
+                                        pontuation: racingDriver.points
+                                    }))
+                                }
+                            />
+                        </div>
+                        { hasFinished && <div className="col-12 col-lg-6 mt-3 mt-lg-0">
+                            <h2 className="mb-2 text-center fs-1 fw-bold">Teams</h2>
+                            <ClassificationTable 
+                                descriptionHeader='Team'
+                                classifications={
+                                    racingTeams.map((team) => ({
+                                        classification: team.position!,
+                                        description: <span
+                                            style={{
+                                                color: team.team.color
+                                            }}
+                                        >{ team.team.name }</span>,
+                                        pontuation: team.points
+                                    }))
+                                }
+                            />
+                        </div> }
+                    </div>
+                    
+                </div>
+
             ) }
-            { hasFinished && <div className="mt-3">
-                    <ClassificationTable 
-                        descriptionHeader='Team'
-                        classifications={
-                            racingTeams.map((team) => ({
-                                classification: team.position!,
-                                description: team.team.name,
-                                pontuation: team.points
-                            }))
-                        }
-                    />
-            </div> }
-            
         </div>
 
     )
