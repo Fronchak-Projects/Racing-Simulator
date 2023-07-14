@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Driver from "../../types/Driver";
 import RacingDriver from '../../types/RacingDriver';
 import Speedway from '../Speedway';
@@ -117,12 +117,8 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                 }
                 return nextRacingDrivers;
             });
-        }, 1000);
+        }, 500);
     }
-
-    const carCardsContainerMemo = useMemo(() => {
-        return <CarCardsContainer drivers={teams.reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])} />;
-    }, [teams]);
 
     return (
         <div>
@@ -143,7 +139,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
             { !hasFinished && <Speedway  
                 lapSize={lapSize}
                 numberOfLaps={numberOfLaps}
-                competitors={racingDrivers}
+                racingDrivers={racingDrivers}
             /> }
             { someoneFinished && (
                 <div className="container-fluid">

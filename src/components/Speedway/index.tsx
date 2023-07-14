@@ -6,10 +6,10 @@ import RacingDriver from '../../types/RacingDriver';
 type Props = {
     numberOfLaps: number;
     lapSize: number;
-    competitors: Array<RacingDriver>
+    racingDrivers: Array<RacingDriver>
 }
 
-const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
+const Speedway = ({ lapSize, numberOfLaps, racingDrivers }: Props) => {
     return (
         <div className="table-responsive">
             <table className="table table-borderless align-middle" id="speedway-table">
@@ -21,12 +21,15 @@ const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
                 </thead>
                 <tbody>
                     { new Array(numberOfLaps).fill(1).map((_, index) => (
-                        <React.Fragment key={index}>
-                            <Lap size={lapSize} lapNumber={index + 1} racingDrivers={competitors} />
-                            
-                            <tr className="row-space"></tr>
-                        </React.Fragment>
-                    )) }
+                        racingDrivers.some((racingDriver) => racingDriver.actualPosition <= (index + 1) * lapSize))  ?
+                            <React.Fragment key={index}>
+                                <Lap size={lapSize} lapNumber={index + 1} racingDrivers={racingDrivers} />
+                                
+                                <tr className="row-space"></tr>
+                            </React.Fragment>
+                            :
+                            <React.Fragment key={index}></React.Fragment>
+                    )}
                 </tbody>
             </table>
         </div>
