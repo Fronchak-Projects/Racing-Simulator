@@ -117,7 +117,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                 }
                 return nextRacingDrivers;
             });
-        }, 300);
+        }, 1000);
     }
 
     const carCardsContainerMemo = useMemo(() => {
@@ -126,8 +126,19 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
 
     return (
         <div>
-            <h1>Competitors:</h1>
-            { carCardsContainerMemo }
+            <h1>Drivers:</h1>
+            <CarCardsContainer 
+                drivers={[...racingDrivers].sort((a, b) => {
+                    if(a.racingPosition && b.racingPosition) {
+                        return (b.racingPosition - a.racingPosition);
+                    }
+                    return a.actualPosition == b.actualPosition ?
+                        a.lastPosition - b.lastPosition :
+                        a.actualPosition - b.actualPosition;
+                })
+                .map((racingDriver) => racingDriver.driver)
+                }
+            />
             { !hasStarted && <button className="btn btn-primary my-3" onClick={initRace}>Start race</button>} 
             { !hasFinished && <Speedway  
                 lapSize={lapSize}
@@ -141,7 +152,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                             <h2 className="mb-2 text-center fs-1 fw-bold">Drivers</h2>
                             <ClassificationTable 
                                 descriptionHeader='Driver'
-                                classifications={
+                                classificationItens={
                                     racingDrivers.filter((racingDriver) => racingDriver.status === 'FINISHED')
                                     .sort((a, b) => a.racingPosition! - b.racingPosition!)
                                     .map((racingDriver) => ({

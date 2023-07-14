@@ -22,7 +22,7 @@ const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {
                 <tbody>
                     { new Array(numberOfLaps).fill(1).map((_, index) => (
                         <React.Fragment key={index}>
-                            <Lap size={lapSize} lapNumber={index + 1} competitors={competitors} />
+                            <Lap size={lapSize} lapNumber={index + 1} racingDrivers={competitors} />
                             
                             <tr className="row-space"></tr>
                         </React.Fragment>
