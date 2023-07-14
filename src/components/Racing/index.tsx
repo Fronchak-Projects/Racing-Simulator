@@ -3,7 +3,7 @@ import Driver from "../../types/Driver";
 import RacingDriver from '../../types/RacingDriver';
 import Speedway from '../Speedway';
 import playDice from '../../utils/Dice';
-import CarCardsContainer from '../CarCardsContainer';
+import DriverCardsContainer from '../DriverCardsContainer';
 import ClassificationTable from '../ClassificationTable';
 import CarIcon from '../CarIcon';
 import Team from '../../types/Team';
@@ -123,7 +123,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
     return (
         <div>
             <h1>Drivers:</h1>
-            <CarCardsContainer 
+            <DriverCardsContainer 
                 drivers={[...racingDrivers].sort((a, b) => {
                     if(a.racingPosition && b.racingPosition) {
                         return (b.racingPosition - a.racingPosition);

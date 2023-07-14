@@ -6,14 +6,16 @@ type Props = {
     driver: Driver
 }
 
-const CarCard = ({ driver }: Props) => {
+const DriverCard = ({ driver }: Props) => {
 
     return (
         <div className="text-center px-2 py-3 car-card">
             <CarIcon color={driver.team.color} />
-            <span className="fw-bold d-block">{ driver.name }</span>
+            <span className="fw-bold d-block" style={{
+                color: driver.team.color
+            }}>{ driver.name }</span>
         </div>
     );
 }
 
-export default CarCard
+export default DriverCard

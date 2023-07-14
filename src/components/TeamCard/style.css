@@ -1,0 +1,12 @@
+.team-card-container {
+    border: 2px solid transparent;
+    border-radius: 10px;
+}
+
+.team-card-container span {
+    font-size: 1em
+}
+
+.team-drivers-container {
+    display: flex;
+}

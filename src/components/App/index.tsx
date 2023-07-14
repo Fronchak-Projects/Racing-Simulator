@@ -1,5 +1,6 @@
 import Driver from "../../types/Driver";
 import Team from "../../types/Team";
+import Championship from "../Championship";
 import Racing from "../Racing";
 
 const rbr: Team = {
@@ -216,7 +217,8 @@ const App =() => {
 
   return (
     <div className="container-fluid py-4">
-      <Racing 
+      <Championship 
+        numberOfRacings={10}
         lapSize={36} 
         numberOfLaps={10} 
         teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
