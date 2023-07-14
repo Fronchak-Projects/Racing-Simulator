@@ -3,14 +3,14 @@ import './style.css';
 
 type Props = {
     descriptionHeader: string;
-    classifications: Array<{
+    classificationItens: Array<{
         classification: number;
         description: React.ReactNode;
         pontuation?: number
     }>
 }
 
-const ClassificationTable = ({ descriptionHeader, classifications }: Props) => {
+const ClassificationTable = ({ descriptionHeader, classificationItens }: Props) => {
     return (
         <table className="table table-dark align-middle table-striped classification-table">
             <thead className="table-primary">
@@ -22,18 +22,18 @@ const ClassificationTable = ({ descriptionHeader, classifications }: Props) => {
 
             </thead>
             <tbody className="table-group-divider">
-                { classifications.sort((a, b) => a.classification - b.classification).map((classification, i) => (
+                { classificationItens.sort((a, b) => a.classification - b.classification).map((item, i) => (
                     <tr key={i}>
                         <td className="text-center">
-                            { classification.classification < 4 ? 
-                                <TrophyIcon position={classification.classification as 1 | 2 | 3} /> 
+                            { item.classification < 4 ? 
+                                <TrophyIcon position={item.classification as 1 | 2 | 3} /> 
                                 : 
-                                <span className="classification-position">{classification.classification}°</span>
+                                <span className="classification-position">{item.classification}°</span>
                             }
                         </td>
-                        <td>{ classification.description }</td>
-                        <td className="text-center">{ classification.pontuation ? 
-                            <span className="text-success classification-pontuation">+ { classification.pontuation }</span> 
+                        <td>{ item.description }</td>
+                        <td className="text-center">{ item.pontuation ? 
+                            <span className="text-success classification-pontuation">+ { item.pontuation }</span> 
                             : '-' 
                             }
                         </td>

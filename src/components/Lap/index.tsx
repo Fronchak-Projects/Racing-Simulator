@@ -5,10 +5,10 @@ import './style.css';
 type Props = {
     lapNumber: number;
     size: number;
-    competitors: Array<RacingDriver>
+    racingDrivers: Array<RacingDriver>
 }
 
-const Lap = ({ lapNumber, size, competitors }: Props) => {
+const Lap = ({ lapNumber, size, racingDrivers }: Props) => {
     
     return (
         <>
@@ -20,13 +20,13 @@ const Lap = ({ lapNumber, size, competitors }: Props) => {
                 <th scope="row" className="lap-label border-none">Lap { lapNumber }</th>
                 { new Array(size).fill(1).map((_, index) => {
                     const length = (size * (lapNumber - 1)) + 1 + index;
-                    const competitor = competitors.find((competitor) => competitor.actualPosition === length);
+                    const racingDriver = racingDrivers.find((racingDriver) => racingDriver.actualPosition === length);
                     return (
                         <td 
                             className="table-dark text-center p-0 td-lap" 
                             key={index}
                         >
-                            { competitor && <CarIcon color={competitor.driver.team.color} /> }
+                            { racingDriver && <CarIcon color={racingDriver.driver.team.color} /> }
                         </td>
                     )
                 } ) }

@@ -164,7 +164,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                             <h2 className="mb-2 text-center fs-1 fw-bold">Teams</h2>
                             <ClassificationTable 
                                 descriptionHeader='Team'
-                                classifications={
+                                classificationItens={
                                     racingTeams.map((team) => ({
                                         classification: team.position!,
                                         description: <span
@@ -177,15 +177,11 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                                 }
                             />
                         </div> }
-                    </div>
-                    
+                    </div>   
                 </div>
-
             ) }
         </div>
-
     )
-
 }
 
 export default Racing;
