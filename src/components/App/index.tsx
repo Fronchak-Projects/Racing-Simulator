@@ -1,84 +1,84 @@
-import DriverType from "../../types/DriverType";
-import TeamType from "../../types/TeamType";
+import Driver from "../../types/Driver";
+import Team from "../../types/Team";
 import Racing from "../Racing";
 
-const rbr: TeamType = {
+const rbr: Team = {
   id: 1,
   color: '#0600EF',
   name: 'Red Bull',
   drivers: []
 }
 
-const mercedes: TeamType = {
+const mercedes: Team = {
   id: 2,
   color: '#00D2BE',
   name: 'Mercedes',
   drivers: []
 }
 
-const ferrari: TeamType = {
+const ferrari: Team = {
   id: 3,
   color: '#DC0000',
   name: 'Ferrari',
   drivers: []
 }
 
-const williams: TeamType = {
+const williams: Team = {
   id: 4,
   color: '#005AFF',
   name: 'Williams',
   drivers: []
 }
 
-const mcLaren: TeamType = {
+const mcLaren: Team = {
   id: 5,
   color: '#FF8700',
   name: 'McLaren',
   drivers: []
 }
 
-const haas: TeamType = {
+const haas: Team = {
   id: 6,
   color: '#BBB',
   name: 'Haas',
   drivers: []
 }
 
-const alfaRomeo: TeamType = {
+const alfaRomeo: Team = {
   id: 7,
   color: '#900000',
   name: 'Alfa Romeo',
   drivers: []
 }
 
-const alpine: TeamType = {
+const alpine: Team = {
   id: 8,
   color: '#0090FF',
   name: 'Alpine',
   drivers: []
 }
 
-const astonMartin: TeamType = {
+const astonMartin: Team = {
   id: 9,
   color: '#006F62',
   name: 'Aston Martin',
   drivers: []
 }
 
-const alphaTauri: TeamType = {
+const alphaTauri: Team = {
   id: 10,
   color: '#2B4562',
   name: 'AlphaTauri',
   drivers: []
 }
 
-const max: DriverType = {
+const max: Driver = {
   id: 1,
   name: "Max Verstappen",
   team: rbr
 }
 
-const sergio: DriverType = {
+const sergio: Driver = {
   id: 2,
   name: "Sergio Pérez",
   team: rbr
@@ -86,13 +86,13 @@ const sergio: DriverType = {
 
 rbr.drivers = [max, sergio];
 
-const hamilton: DriverType = {
+const hamilton: Driver = {
   id: 3,
   name: "Lewis Hamilton",
   team: mercedes
 }
 
-const russel: DriverType = {
+const russel: Driver = {
   id: 4,
   name: "George Russell",
   team: mercedes
@@ -100,13 +100,13 @@ const russel: DriverType = {
 
 mercedes.drivers = [hamilton, russel];
 
-const carlos: DriverType = {
+const carlos: Driver = {
   id: 5,
   name: "Carlos Sainz",
   team: ferrari
 }
 
-const leclerc: DriverType = {
+const leclerc: Driver = {
   id: 6,
   name: "Charles Leclerc",
   team: ferrari
@@ -114,13 +114,13 @@ const leclerc: DriverType = {
 
 ferrari.drivers = [carlos, leclerc];
 
-const alexander: DriverType = {
+const alexander: Driver = {
   id: 7,
   name: "Alexander Albon",
   team: williams
 }
 
-const logan: DriverType = {
+const logan: Driver = {
   id: 8,
   name: "Logan Sargeant",
   team: williams
@@ -128,13 +128,13 @@ const logan: DriverType = {
 
 williams.drivers = [alexander, logan];
 
-const lando: DriverType = {
+const lando: Driver = {
   id: 9,
   name: "Lando Norris",
   team: mcLaren
 }
 
-const oscar: DriverType = {
+const oscar: Driver = {
   id: 10,
   name: "Oscar Piastri",
   team: mcLaren
@@ -142,13 +142,13 @@ const oscar: DriverType = {
 
 mcLaren.drivers = [lando, oscar];
 
-const hulkenberg: DriverType = {
+const hulkenberg: Driver = {
   id: 11,
   name: "	Nico Hulkenberg",
   team: haas
 }
 
-const magnussen: DriverType = {
+const magnussen: Driver = {
   id: 12,
   name: "Kevin Magnussen",
   team: haas
@@ -156,13 +156,13 @@ const magnussen: DriverType = {
 
 haas.drivers = [hulkenberg, magnussen];
 
-const bottas: DriverType = {
+const bottas: Driver = {
   id: 13,
   name: 'Valtteri Bottas',
   team: alfaRomeo
 }
 
-const zhou: DriverType = {
+const zhou: Driver = {
   id: 14,
   name: 'Guanyu Zhou',
   team: alfaRomeo
@@ -170,13 +170,13 @@ const zhou: DriverType = {
 
 alfaRomeo.drivers = [bottas, zhou];
 
-const estaban: DriverType = {
+const estaban: Driver = {
   id: 15,
   name: 'Esteban Ocon',
   team: alpine
 }
 
-const pierre: DriverType = {
+const pierre: Driver = {
   id: 16,
   name: 'Pierre Gasly',
   team: alpine
@@ -184,13 +184,13 @@ const pierre: DriverType = {
 
 alpine.drivers = [estaban, pierre];
 
-const alonso: DriverType = {
+const alonso: Driver = {
   id: 17,
   name: 'Fernando Alonso',
   team: astonMartin
 }
 
-const stroll: DriverType = {
+const stroll: Driver = {
   id: 18,
   name: 'Lance Stroll',
   team: astonMartin
@@ -198,13 +198,13 @@ const stroll: DriverType = {
 
 astonMartin.drivers = [alonso, stroll];
 
-const yuki: DriverType = {
+const yuki: Driver = {
   id: 19,
   name: 'Yuki Tsunoda',
   team: alphaTauri
 }
 
-const nyck: DriverType = {
+const nyck: Driver = {
   id: 20,
   name: 'Nyck de Vries',
   team: alphaTauri

@@ -1,12 +1,12 @@
 import React from 'react';
 import Lap from '../Lap';
 import './style.css';
-import CompetitorType from '../../types/CompetitorType';
+import RacingDriver from '../../types/RacingDriver';
 
 type Props = {
     numberOfLaps: number;
     lapSize: number;
-    competitors: Array<CompetitorType>
+    competitors: Array<RacingDriver>
 }
 
 const Speedway = ({ lapSize, numberOfLaps, competitors }: Props) => {

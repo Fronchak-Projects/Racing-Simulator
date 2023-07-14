@@ -1,11 +1,11 @@
-import CompetitorType from '../../types/CompetitorType';
+import RacingDriver from '../../types/RacingDriver';
 import CarIcon from '../CarIcon';
 import './style.css';
 
 type Props = {
     lapNumber: number;
     size: number;
-    competitors: Array<CompetitorType>
+    competitors: Array<RacingDriver>
 }
 
 const Lap = ({ lapNumber, size, competitors }: Props) => {

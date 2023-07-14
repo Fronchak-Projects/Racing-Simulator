@@ -1,9 +1,9 @@
-import DriverType from "../../types/DriverType"
+import Driver from "../../types/Driver"
 import CarCard from "../CarCard";
 import './style.css';
 
 type Props = {
-    drivers: Array<DriverType>
+    drivers: Array<Driver>
 }
 
 const CarCardsContainer = ({ drivers }: Props) => {
