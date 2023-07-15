@@ -7,9 +7,14 @@ import DriverCardsContainer from '../DriverCardsContainer';
 import ClassificationTable from '../ClassificationTable';
 import CarIcon from '../CarIcon';
 import Team from '../../types/Team';
-import RacingTeam from '../../types/RacingTeam';
 import './style.css';
 import RacingPoints from '../../types/RacingPoints';
+
+type TeamRacingTable = {
+    team: Team;
+    points: number;
+    firstPosition: number;
+}
 
 type Props = {
     numberOfLaps: number;
@@ -29,11 +34,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                 racingPosition: undefined,
                 points: 0
             })));
-    const [racingTeams, setRacingTeams] = useState<Array<RacingTeam>>(() => teams.map((team) => ({
-                points: 0,
-                team,
-                position: undefined
-            })));
+
     const ciclo = useRef<number>(0);
     const run = useRef<boolean>(false);
     const speedWayLength = lapSize * numberOfLaps;
@@ -50,7 +51,6 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                             racingDriver.position += (playDice() + playDice());
                             if(racingDriver.position > speedWayLength) {
                                 const numberOfFinishedDrivers = nextRacingDrivers.filter((r) => r.position > speedWayLength).length - 1;
-                                console.log(`numberOfFinishedDrivers: ${numberOfFinishedDrivers}`);
                                 racingDriver.racingPosition = numberOfFinishedDrivers + 1;
                                 if(racingDriver.racingPosition <= systemPoints.length) {
                                     racingDriver.points = systemPoints[racingDriver.racingPosition - 1];
@@ -89,6 +89,24 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
 
     if(hasFinished) {
         clearInterval(ciclo.current);
+    }
+
+    const getTeamRacingTable = (): Array<TeamRacingTable> => {
+        return teams.map((team) => {
+            const drivers: Array<RacingDriver> = racingDrivers.filter((racingDriver) => racingDriver.driver.team.id === team.id);
+            const points = drivers.reduce((prev, curr) => prev + curr.points, 0);
+            const firstPosition = racingDrivers.findIndex((racingDriver) => racingDriver.driver.team.id === team.id) + 1;
+            return {
+                team: team,
+                points,
+                firstPosition
+            }
+        }).sort((teamA, teamB) => {
+            if(teamA.points === teamB.points) {
+                return teamA.firstPosition - teamB.firstPosition;
+            }
+            return teamB.points - teamA.points;
+        })
     }
 
     const handleSetPoints = () => {
@@ -142,8 +160,8 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                             <ClassificationTable 
                                 descriptionHeader='Team'
                                 classificationItens={
-                                    racingTeams.map((team) => ({
-                                        classification: team.position!,
+                                    getTeamRacingTable().map((team, i) => ({
+                                        classification: i + 1,
                                         description: <span
                                             style={{
                                                 color: team.team.color
