@@ -16,24 +16,21 @@
     color: var(--bronze-color);
 }
 
-.classification-column {
-    width: 100px;
-}
-
-.pontuation-column {
-    width: 85px;
-}
-
-.situation-column {
-    width: 85px;
-}
-
-.classification-position {
-    font-weight: bold;
+.my-table th {
     font-size: 1.4em;
+    padding: 15px;
 }
 
-.classification-pontuation {
+.my-table .classification-header {
+    width: min-content;
+}
+
+.my-table .description-header {
+    width: 100%;
+    padding-left: 4px
+}
+
+.my-table td {
+    font-size: 1.2em;
     font-weight: bold;
-    font-size: 1.4em; 
 }

@@ -22,6 +22,9 @@ type Props = {
 type ChampionshipDriverTable = {
     driver: Driver,
     points: number;
+    numberOfFirstPlaces: number;
+    numberOfSecondPlaces: number;
+    numberOfThirdPlaces: number;
     racingPoints: Array<number>;
     situation?: number;
 }
@@ -80,9 +83,16 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         const drivers: Array<ChampionshipDriverTable> = championshipTeams.reduce((prev: Array<ChampionshipDriver>, curr) => {
             return [...prev, ...curr.championshipDrivers]
         }, []).map((championshipDriver) => {
+            const points = championshipDriver.racingPoints.reduce((prev, curr) => prev + curr, 0);
+            const numberOfFirstPlaces = championshipDriver.racingPoints.filter((racingPoint) => racingPoint === systemPoints[0]).length;
+            const numberOfSecondPlaces = championshipDriver.racingPoints.filter((racingPoint) => racingPoint === systemPoints[1]).length;
+            const numberOfThirdPlaces = championshipDriver.racingPoints.filter((racingPoint) => racingPoint === systemPoints[2]).length;
             return {
                 ...championshipDriver,
-                points: championshipDriver.racingPoints.reduce((prev, curr) => prev + curr, 0)
+                points,
+                numberOfFirstPlaces,
+                numberOfSecondPlaces,
+                numberOfThirdPlaces
             }
         }).sort((a, b) => {
             if(a.points === b.points) {
@@ -113,7 +123,10 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 return {
                     ...championshipDriver,
                     racingPoints: championshipDriver.racingPoints.slice(0, -1),
-                    points: championshipDriver.racingPoints.slice(0, -1).reduce((prev, curr) => prev + curr, 0)
+                    points: championshipDriver.racingPoints.slice(0, -1).reduce((prev, curr) => prev + curr, 0),
+                    numberOfFirstPlaces: 0,
+                    numberOfSecondPlaces: 0,
+                    numberOfThirdPlaces: 0
                 }
             }).sort((a, b) => {
                 if(a.points === b.points) {
@@ -150,13 +163,22 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-lg-6">
-                        <h1 className="mb-3 text-center">Drivers</h1>
-                        <table className="table table-dark align-middle table-striped">
-                            <thead className="table-primary">
+                        <h1 className="mb-0 py-3 text-center bg-dark text-white fw-bold border-bottom border-3">Drivers</h1>
+                        <table className="table table-dark align-middle table-striped table-sm my-table">
+                            <thead className="align-middle">
                                 <tr>
-                                    <th scope="col" className="classification-column">Classificação</th>
-                                    <th scope="col">Driver</th>
+                                    <th scope="col" className="classification-header">Classificação</th>
+                                    <th scope="col" className="description-header">Driver</th>
                                     <th scope="col" className="pontuation-column">Pontuação</th>
+                                    <th scope="col" className="trophy-column text-center">
+                                        <TrophyIcon position={1} />
+                                    </th>
+                                    <th scope="col" className="trophy-column text-center">
+                                        <TrophyIcon position={2} />
+                                    </th>
+                                    <th scope="col" className="trophy-column text-center">
+                                        <TrophyIcon position={3} />
+                                    </th>
                                     <th scope="col" className="situation-column">Situação</th>
                                 </tr>
                             </thead>
@@ -171,18 +193,26 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                             }
                                         </td>
                                         <td>
-                                            <div className="d-flex align-center">
-                                                <CarIcon color={driver.driver.team.color} />
+                                            <div className="classification-description">
                                                 <span 
                                                     style={{
                                                         color: driver.driver.team.color
                                                     }}
-                                                    className="mx-4">{ driver.driver.name }
+                                                    >{ driver.driver.name }
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="text-center classification-pontuation">
                                             { driver.points }
+                                        </td>
+                                        <td className="text-center classification-thophy"> 
+                                            { driver.numberOfFirstPlaces ? driver.numberOfFirstPlaces : '-' }
+                                        </td>
+                                        <td className="text-center classification-thophy"> 
+                                            { driver.numberOfSecondPlaces ? driver.numberOfSecondPlaces : '-' }
+                                        </td>
+                                        <td className="text-center classification-thophy"> 
+                                            { driver.numberOfThirdPlaces ? driver.numberOfThirdPlaces : '-' }
                                         </td>
                                         <td className="text-center">
                                             <div className="situation-container">
