@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Driver from "../../types/Driver";
 import RacingDriver from '../../types/RacingDriver';
 import Speedway from '../Speedway';
@@ -21,7 +21,6 @@ type Props = {
 
 const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }: Props) => {
 
-    const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>(() => teams
             .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
             .map((driver) => ({
@@ -41,8 +40,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
     const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.position > speedWayLength);
     const hasFinished = racingDrivers.every((racingDriver) => racingDriver.position > speedWayLength);
 
-    const initRace = () => {
-        setHasStarted(true);
+    useEffect(() => {
         ciclo.current = setInterval(() => {
             setRacingDrivers((prevState) => {
                 if(run.current) {
@@ -83,7 +81,11 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                 }
             });
         }, 250);
-    }
+
+        return () => {
+            clearInterval(ciclo.current);
+        }
+    }, [speedWayLength, systemPoints]);
 
     if(hasFinished) {
         clearInterval(ciclo.current);
@@ -102,7 +104,6 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
             <DriverCardsContainer 
                 drivers={[...racingDrivers].reverse().map((racingDriver) => racingDriver.driver)}
             />
-            { !hasStarted && <button className="btn btn-primary my-3" onClick={initRace}>Start race</button>} 
             { hasFinished && (
                 <button className="btn btn-primary mb-3" onClick={handleSetPoints}>Go to championship classification</button>
             ) }
