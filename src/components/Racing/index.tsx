@@ -5,10 +5,9 @@ import Speedway from '../Speedway';
 import playDice from '../../utils/Dice';
 import DriverCardsContainer from '../DriverCardsContainer';
 import ClassificationTable from '../ClassificationTable';
-import CarIcon from '../CarIcon';
 import Team from '../../types/Team';
-import './style.css';
 import RacingPoints from '../../types/RacingPoints';
+import TableTitle from '../TableTitle';
 
 type TeamRacingTable = {
     team: Team;
@@ -134,29 +133,28 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                 <div className="container-fluid">
                     <div className='row'>
                         <div className={hasFinished ? 'col-12 col-lg-6' : 'col-12'}>
-                            <h2 className="mb-2 text-center fs-1 fw-bold">Drivers</h2>
+                            <TableTitle title='Drivers' />
                             <ClassificationTable 
                                 descriptionHeader='Driver'
                                 classificationItens={
                                     racingDrivers.filter((racingDriver) => racingDriver.position > speedWayLength)
                                     .map((racingDriver) => ({
                                         classification: racingDriver.racingPosition!,
-                                        description: <div className="d-flex align-center">
-                                            <CarIcon color={racingDriver.driver.team.color} />
+                                        description: 
                                             <span 
                                                 style={{
                                                     color: racingDriver.driver.team.color
                                                 }}
-                                                className="mx-4">{ racingDriver.driver.name }
+                                                >{ racingDriver.driver.name }
                                             </span>
-                                        </div>,
+                                        ,
                                         pontuation: racingDriver.points
                                     }))
                                 }
                             />
                         </div>
                         { hasFinished && <div className="col-12 col-lg-6 mt-3 mt-lg-0">
-                            <h2 className="mb-2 text-center fs-1 fw-bold">Teams</h2>
+                            <TableTitle title='Teams' />
                             <ClassificationTable 
                                 descriptionHeader='Team'
                                 classificationItens={

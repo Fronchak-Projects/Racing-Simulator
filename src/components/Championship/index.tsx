@@ -7,9 +7,9 @@ import Racing from '../Racing';
 import Driver from '../../types/Driver';
 import RacingPoints from '../../types/RacingPoints';
 import ChampionshipDriver from '../../types/ChampionshipDriver';
-import CarIcon from '../CarIcon';
-import './style.css';
 import TrophyIcon from '../TrophyIcon';
+import TableTitle from '../TableTitle';
+import './style.css';
 
 type Props = {
     numberOfRacings: number;
@@ -163,37 +163,37 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-lg-6">
-                        <h1 className="mb-0 py-3 text-center bg-dark text-white fw-bold border-bottom border-3">Drivers</h1>
+                        <TableTitle title='Drivers' />
                         <table className="table table-dark align-middle table-striped table-sm my-table">
                             <thead className="align-middle">
                                 <tr>
-                                    <th scope="col" className="classification-header">Classificação</th>
+                                    <th scope="col" >Classificação</th>
                                     <th scope="col" className="description-header">Driver</th>
-                                    <th scope="col" className="pontuation-column">Pontuação</th>
-                                    <th scope="col" className="trophy-column text-center">
+                                    <th scope="col">Pontuação</th>
+                                    <th scope="col">
                                         <TrophyIcon position={1} />
                                     </th>
-                                    <th scope="col" className="trophy-column text-center">
+                                    <th scope="col">
                                         <TrophyIcon position={2} />
                                     </th>
-                                    <th scope="col" className="trophy-column text-center">
+                                    <th scope="col">
                                         <TrophyIcon position={3} />
                                     </th>
-                                    <th scope="col" className="situation-column">Situação</th>
+                                    <th scope="col">Situação</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 { drivers.map((driver, i) => (
                                     <tr key={i}>
-                                        <td className="text-center classification-position">
+                                        <td>
                                             { (status === 'FINISHED' && (i < 3)) ?
                                                 <TrophyIcon position={i + 1 as 1 | 2 | 3} />
                                                 :
                                                 `${i + 1}°`
                                             }
                                         </td>
-                                        <td>
-                                            <div className="classification-description">
+                                        <td className="description-cell">
+                                            <div>
                                                 <span 
                                                     style={{
                                                         color: driver.driver.team.color
@@ -202,19 +202,19 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="text-center classification-pontuation">
+                                        <td>
                                             { driver.points }
                                         </td>
-                                        <td className="text-center classification-thophy"> 
+                                        <td> 
                                             { driver.numberOfFirstPlaces ? driver.numberOfFirstPlaces : '-' }
                                         </td>
-                                        <td className="text-center classification-thophy"> 
+                                        <td> 
                                             { driver.numberOfSecondPlaces ? driver.numberOfSecondPlaces : '-' }
                                         </td>
-                                        <td className="text-center classification-thophy"> 
+                                        <td > 
                                             { driver.numberOfThirdPlaces ? driver.numberOfThirdPlaces : '-' }
                                         </td>
-                                        <td className="text-center">
+                                        <td>
                                             <div className="situation-container">
                                             {
                                                 driver.situation ?
@@ -239,41 +239,38 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                         </table>
                     </div>
                     <div className="col-12 col-lg-6">
-                        <h1 className="mb-3 text-center">Teams</h1>
-                        <table className="table table-dark align-middle table-striped">
-                            <thead className="table-primary">
+                        <TableTitle title='Teams' />
+                        <table className="table table-dark align-middle table-striped table-sm my-table">
+                            <thead className="align-middle">
                                 <tr>
-                                    <th scope="col" className="classification-column">Classificação</th>
-                                    <th scope="col">Team</th>
-                                    <th scope="col" className="pontuation-column">Pontuação</th>
-                                    <th scope="col" className="situation-column">Situação</th>
+                                    <th scope="col">Classificação</th>
+                                    <th scope="col" className="description-header">Team</th>
+                                    <th scope="col">Pontuação</th>
+                                    <th scope="col">Situação</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 { teamsTable.map((team, i) => (
                                     <tr key={i}>
-                                        <td className="text-center classification-position">
+                                        <td>
                                             { (status === 'FINISHED' && i < 3) ?
                                                 <TrophyIcon position={i + 1 as 1 | 2 | 3} />
                                                 :
                                                 `${i + 1}°`
                                             }
                                         </td>
-                                        <td>
-                                            <div className="d-flex align-center">
-                                                <CarIcon color={team.team.color} />
-                                                <span 
-                                                    style={{
-                                                        color: team.team.color
-                                                    }}
-                                                    className="mx-4">{ team.team.name }
-                                                </span>
-                                            </div>
+                                        <td className="description-cell">
+                                            <span 
+                                                style={{
+                                                    color: team.team.color
+                                                }}
+                                            >{ team.team.name }
+                                            </span>
                                         </td>
-                                        <td className="text-center classification-pontuation">
+                                        <td>
                                             { team.points }
                                         </td>
-                                        <td className="text-center">
+                                        <td >
                                             <div className="situation-container">
                                             {
                                                 team.situation ?
@@ -310,10 +307,11 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
     return <>
         { status === 'NOT_STARTED' && (
             <>
-                <h1 className="mb-3">Championship Teams</h1>
                 <TeamCardsContainer teams={teams} />
-                <button className="btn btn-primary mt-3" onClick={startChampionship}>Start championship</button>
+                <hr />
+                <button className="btn btn-primary" onClick={startChampionship}>Start championship</button>
             </>
+                
         ) }
         { status === 'RACING' && (
             <>
@@ -329,6 +327,9 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         ) }
         { (status === 'SUMMARY' || status === 'FINISHED') && (
             <>
+                
+                <TeamCardsContainer teams={teams} />    
+                <hr />
                 { status === 'SUMMARY' ? 
                     <h1 className="mb-3">Championship Classification - Racings {racingNumber}/{numberOfRacings}</h1>
                     :

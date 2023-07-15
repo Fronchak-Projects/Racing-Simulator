@@ -6,19 +6,4 @@
     font-size: 1em;
 }
 
-.situation-container span {
-    font-size: 1.2em; 
-}
 
-.classification-description {
-    display: flex;
-    align-items: center;
-}
-
-.classification-description i {
-    font-size: 2em;
-}
-
-.classification-description span {
-    font-size: 1.2em;
-}

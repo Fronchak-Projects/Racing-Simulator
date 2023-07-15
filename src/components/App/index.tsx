@@ -219,7 +219,7 @@ const App =() => {
       <Championship 
         numberOfRacings={10}
         lapSize={24} 
-        numberOfLaps={4} 
+        numberOfLaps={5} 
         teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
         systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  
       />

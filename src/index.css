@@ -16,6 +16,10 @@
     color: var(--bronze-color);
 }
 
+.my-table {
+    text-align: center;
+}
+
 .my-table th {
     font-size: 1.4em;
     padding: 15px;
@@ -27,10 +31,19 @@
 
 .my-table .description-header {
     width: 100%;
-    padding-left: 4px
+    padding-left: 4px;
+    text-align: left;
 }
 
 .my-table td {
     font-size: 1.2em;
     font-weight: bold;
+}
+
+.my-table td.description-cell {
+    text-align: left;
+}
+
+.my-table td i {
+    font-size: 1.1em;
 }
