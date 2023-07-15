@@ -9,6 +9,7 @@ import RacingPoints from '../../types/RacingPoints';
 import ChampionshipDriver from '../../types/ChampionshipDriver';
 import CarIcon from '../CarIcon';
 import './style.css';
+import TrophyIcon from '../TrophyIcon';
 
 type Props = {
     numberOfRacings: number;
@@ -25,6 +26,13 @@ type ChampionshipDriverTable = {
     situation?: number;
 }
 
+type ChampionshipTeamTable = {
+    team: Team,
+    points: number;
+    drivers: Array<ChampionshipDriverTable>;
+    situation?: number;
+}
+
 const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoints }: Props) => {
 
     const [status, setStatus] = useState<ChampionshipStatus>('NOT_STARTED');
@@ -38,6 +46,8 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             }))
         }))
     );
+
+    const hasFinished = racingNumber === numberOfRacings;
 
     const startChampionship = () => {
         setStatus('RACING');
@@ -58,8 +68,12 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             }
         });
         setChampionShipTeams(nextChampionshipTeams);
-        setStatus('SUMMARY');
-
+        if(hasFinished) {
+            setStatus('FINISHED');
+        }
+        else {
+            setStatus('SUMMARY');
+        }
     }
 
     const driversTable = () => {
@@ -79,6 +93,19 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             return b.points - a.points
         });
 
+        const teamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
+            const teamDrivers: Array<ChampionshipDriverTable> = drivers.filter((driver) => driver.driver.team.id === team.id);
+            const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
+
+            return {
+                team,
+                points,
+                drivers: teamDrivers
+            }
+        }).sort((teamA, teamB) => {
+            return teamB.points - teamA.points;
+        })
+
         if(racingNumber > 1) {
             const prevDriver: Array<ChampionshipDriverTable> = championshipTeams.reduce((prev: Array<ChampionshipDriver>, curr) => {
                 return [...prev, ...curr.championshipDrivers];
@@ -97,8 +124,25 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 return b.points - a.points
             });
 
+            const prevTeamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
+                const teamDrivers: Array<ChampionshipDriverTable> = prevDriver.filter((driver) => driver.driver.team.id === team.id);
+                const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
+    
+                return {
+                    team,
+                    points,
+                    drivers: teamDrivers
+                }
+            }).sort((teamA, teamB) => {
+                return teamB.points - teamA.points;
+            })
+
             drivers.forEach((driver, i) => {
                 driver.situation = prevDriver.findIndex((prevDriver) => prevDriver.driver.id === driver.driver.id) - i;
+            })
+
+            teamsTable.forEach((team, i) => {
+                team.situation = prevTeamsTable.findIndex((prevTeam) => prevTeam.team.id === team.team.id) - i;
             })
         }
 
@@ -106,6 +150,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-lg-6">
+                        <h1 className="mb-3 text-center">Drivers</h1>
                         <table className="table table-dark align-middle table-striped">
                             <thead className="table-primary">
                                 <tr>
@@ -118,7 +163,13 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                             <tbody>
                                 { drivers.map((driver, i) => (
                                     <tr key={i}>
-                                        <td className="text-center classification-position">{ i + 1}</td>
+                                        <td className="text-center classification-position">
+                                            { (status === 'FINISHED' && (i < 3)) ?
+                                                <TrophyIcon position={i + 1 as 1 | 2 | 3} />
+                                                :
+                                                i + 1
+                                            }
+                                        </td>
                                         <td>
                                             <div className="d-flex align-center">
                                                 <CarIcon color={driver.driver.team.color} />
@@ -158,7 +209,63 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                         </table>
                     </div>
                     <div className="col-12 col-lg-6">
-
+                        <h1 className="mb-3 text-center">Teams</h1>
+                        <table className="table table-dark align-middle table-striped">
+                            <thead className="table-primary">
+                                <tr>
+                                    <th scope="col" className="classification-column">Classificação</th>
+                                    <th scope="col">Team</th>
+                                    <th scope="col" className="pontuation-column">Pontuação</th>
+                                    <th scope="col" className="situation-column">Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { teamsTable.map((team, i) => (
+                                    <tr key={i}>
+                                        <td className="text-center classification-position">
+                                            { (status === 'FINISHED' && i < 3) ?
+                                                <TrophyIcon position={i + 1 as 1 | 2 | 3} />
+                                                :
+                                                i + 1
+                                            }
+                                        </td>
+                                        <td>
+                                            <div className="d-flex align-center">
+                                                <CarIcon color={team.team.color} />
+                                                <span 
+                                                    style={{
+                                                        color: team.team.color
+                                                    }}
+                                                    className="mx-4">{ team.team.name }
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="text-center classification-pontuation">
+                                            { team.points }
+                                        </td>
+                                        <td className="text-center">
+                                            <div className="situation-container">
+                                            {
+                                                team.situation ?
+                                                    team.situation > 0 ?
+                                                        <>
+                                                            <i className="bi bi-caret-up-fill text-success"></i>
+                                                            <span className="text-success">{ team.situation }</span>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <i className="bi bi-caret-down-fill text-danger"></i>
+                                                            <span className="text-danger">{ -1 * team.situation }</span>
+                                                        </>
+                                                :
+                                                '-'
+                                            }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )) }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -192,7 +299,11 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         ) }
         { (status === 'SUMMARY' || status === 'FINISHED') && (
             <>
-                <h1 className="mb-3">Championship Classification</h1>
+                { status === 'SUMMARY' ? 
+                    <h1 className="mb-3">Championship Classification - Racings {racingNumber}/{numberOfRacings}</h1>
+                    :
+                    <h1 className="mb-3">Championship Results</h1>
+                }
                 { status !== 'FINISHED' && (
                     <button className="mb-3 btn btn-primary" onClick={handleGoToNextRacing}>Go to next racing</button>
                 ) }
