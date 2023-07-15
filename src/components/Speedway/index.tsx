@@ -21,7 +21,7 @@ const Speedway = ({ lapSize, numberOfLaps, racingDrivers }: Props) => {
                 </thead>
                 <tbody>
                     { new Array(numberOfLaps).fill(1).map((_, index) => (
-                        racingDrivers.some((racingDriver) => racingDriver.actualPosition <= (index + 1) * lapSize))  ?
+                        racingDrivers.some((racingDriver) => racingDriver.position <= (index + 1) * lapSize))  ?
                             <React.Fragment key={index}>
                                 <Lap size={lapSize} lapNumber={index + 1} racingDrivers={racingDrivers} />
                                 

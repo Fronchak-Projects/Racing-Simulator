@@ -20,7 +20,7 @@ const Lap = ({ lapNumber, size, racingDrivers }: Props) => {
                 <th scope="row" className="lap-label border-none">Lap { lapNumber }</th>
                 { new Array(size).fill(1).map((_, index) => {
                     const length = (size * (lapNumber - 1)) + 1 + index;
-                    const racingDriver = racingDrivers.find((racingDriver) => racingDriver.actualPosition === length);
+                    const racingDriver = racingDrivers.find((racingDriver) => racingDriver.position === length);
                     return (
                         <td 
                             className="table-dark text-center p-0 td-lap" 

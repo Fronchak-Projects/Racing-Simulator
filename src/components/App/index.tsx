@@ -220,8 +220,8 @@ const App =() => {
         numberOfRacings={10}
         lapSize={24} 
         numberOfLaps={5} 
-        //teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
-        teams={[mercedes, rbr, ferrari]}
+        teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
+        //teams={[mercedes, rbr, ferrari]}
         systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  
       />
     </div>

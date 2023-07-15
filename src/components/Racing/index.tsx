@@ -26,9 +26,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
             .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
             .map((driver) => ({
                 driver,
-                actualPosition: 0,
-                lastPosition: 0,
-                status: 'RUNNING',
+                position: 0,
                 racingPosition: undefined,
                 points: 0
             })));
@@ -38,103 +36,57 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                 position: undefined
             })));
     const ciclo = useRef<number>(0);
+    const run = useRef<boolean>(false);
     const speedWayLength = lapSize * numberOfLaps;
-    const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.status === 'FINISHED');
-    const hasFinished = racingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED');
-
-    if(hasFinished) {
-        console.log('has finished')
-        clearInterval(ciclo.current);
-    }
+    const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.position > speedWayLength);
+    const hasFinished = racingDrivers.every((racingDriver) => racingDriver.position > speedWayLength);
 
     const initRace = () => {
         setHasStarted(true);
         ciclo.current = setInterval(() => {
             setRacingDrivers((prevState) => {
-                const finishingRacingDrivers: Array<RacingDriver> = [];
-                const nextRacingDrivers = prevState.map((racingDriver) => {
-                    if(racingDriver.status === 'RUNNING') {
-                        const nextRacingDriver = {...racingDriver};
-                        nextRacingDriver.lastPosition = nextRacingDriver.actualPosition;
-                        nextRacingDriver.actualPosition = nextRacingDriver.actualPosition + playDice() + playDice();
-                        if(nextRacingDriver.actualPosition > speedWayLength) {
-                            finishingRacingDrivers.push(nextRacingDriver);
+                if(run.current) {
+                    let nextRacingDrivers = prevState.map((racingDrivers) => ({...racingDrivers}));
+                    nextRacingDrivers = nextRacingDrivers.map((racingDriver) => {
+                        if(racingDriver.position <= speedWayLength) {
+                            racingDriver.position += (playDice() + playDice());
+                            if(racingDriver.position > speedWayLength) {
+                                const numberOfFinishedDrivers = nextRacingDrivers.filter((r) => r.position > speedWayLength).length - 1;
+                                console.log(`numberOfFinishedDrivers: ${numberOfFinishedDrivers}`);
+                                racingDriver.racingPosition = numberOfFinishedDrivers + 1;
+                                if(racingDriver.racingPosition <= systemPoints.length) {
+                                    racingDriver.points = systemPoints[racingDriver.racingPosition - 1];
+                                }
+                            }
+                            return racingDriver;
                         }
-                        return nextRacingDriver;
-                    }
-                    else {
                         return racingDriver;
-                    }
-                });
-
-                if(finishingRacingDrivers.length >= 1) {
-                    console.log('Before finishingRacingDrivers');
-                    console.log(finishingRacingDrivers);
-                    const driversFinished = prevState.filter((racingDriver) => racingDriver.status === 'FINISHED').length;
-                    console.log(`driversFinished: ${driversFinished}`);
-                    finishingRacingDrivers
-                        .sort((a, b) => 
-                            a.lastPosition == b.lastPosition ? 
-                            a.actualPosition - b.actualPosition : 
-                            a.lastPosition - b.lastPosition);
-    
-                    let lastPosition = 0;
-                    let actualPosition = 0;
-                    let referencePosition = 0;
-                    finishingRacingDrivers.forEach((racingDriver, i) => {
-                        racingDriver.status = 'FINISHED';
-                        if(racingDriver.lastPosition == lastPosition && racingDriver.actualPosition == actualPosition) {
-                            racingDriver.racingPosition = referencePosition;
-                        }
-                        else {
-                            racingDriver.racingPosition = driversFinished + i + 1;
-                            lastPosition = racingDriver.lastPosition;
-                            actualPosition = racingDriver.actualPosition;
-                            referencePosition = racingDriver.racingPosition!;
-                        }
-                        if(racingDriver.racingPosition <= systemPoints.length) {
-                            racingDriver.points = systemPoints[racingDriver.racingPosition - 1];
-                        }
                     })
-                    console.log('After finishingRacingDrivers');
-                    console.log(finishingRacingDrivers);
-                }
-
-                //if(nextRacingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED')) {
-                //    console.log('Clear interval');
-                //    console.log(nextRacingDrivers);
-                //    clearInterval(ciclo);
-                    /*
-                    const nextRacingTeams: Array<RacingTeam> = racingTeams.map((racingTeam) => {
-                        const points = nextRacingDrivers.filter((racingDriver) => racingDriver.driver.team.id === racingTeam.team.id)
-                            .reduce((prev, curr) => prev + curr.points , 0);
-                        return {
-                            ...racingTeam,
-                            points
+                    nextRacingDrivers.sort((driverA, driverB) => {
+                        if(driverA.racingPosition && driverB.racingPosition) {
+                            return driverA.racingPosition - driverB.racingPosition;
                         }
-                    })
-    
-                    nextRacingTeams.sort((a, b) => b.points - a.points);
-    
-                    let points = -1;
-                    let position = -1;
-    
-                    nextRacingTeams.forEach((racingTeam, i) => {
-                        if(racingTeam.points === points) {
-                            racingTeam.position = position;
+                        if(driverA.racingPosition) {
+                            return -1;
                         }
-                        else {
-                            points = racingTeam.points;
-                            racingTeam.position = i + 1;
-                            position = racingTeam.position;
+                        if(driverB.racingPosition) {
+                            return 1;
                         }
+                        return driverB.position - driverA.position;
                     });
-                    setRacingTeams(nextRacingTeams);
-                    */
-                //}
-                return nextRacingDrivers;
+                    run.current = false;
+                    return nextRacingDrivers;
+                }
+                else {
+                    run.current = true;
+                    return prevState;
+                }
             });
         }, 250);
+    }
+
+    if(hasFinished) {
+        clearInterval(ciclo.current);
     }
 
     const handleSetPoints = () => {
@@ -148,16 +100,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
         <div>
             <h1>Positions:</h1>
             <DriverCardsContainer 
-                drivers={[...racingDrivers].sort((a, b) => {
-                    if(a.racingPosition && b.racingPosition) {
-                        return (b.racingPosition - a.racingPosition);
-                    }
-                    return a.actualPosition == b.actualPosition ?
-                        a.lastPosition - b.lastPosition :
-                        a.actualPosition - b.actualPosition;
-                })
-                .map((racingDriver) => racingDriver.driver)
-                }
+                drivers={[...racingDrivers].reverse().map((racingDriver) => racingDriver.driver)}
             />
             { !hasStarted && <button className="btn btn-primary my-3" onClick={initRace}>Start race</button>} 
             { hasFinished && (
@@ -176,8 +119,7 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
                             <ClassificationTable 
                                 descriptionHeader='Driver'
                                 classificationItens={
-                                    racingDrivers.filter((racingDriver) => racingDriver.status === 'FINISHED')
-                                    .sort((a, b) => a.racingPosition! - b.racingPosition!)
+                                    racingDrivers.filter((racingDriver) => racingDriver.position > speedWayLength)
                                     .map((racingDriver) => ({
                                         classification: racingDriver.racingPosition!,
                                         description: <div className="d-flex align-center">
