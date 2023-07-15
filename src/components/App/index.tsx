@@ -217,11 +217,10 @@ const App =() => {
   return (
     <div className="container-fluid py-4">
       <Championship 
-        numberOfRacings={4}
-        lapSize={24} 
-        numberOfLaps={5} 
+        numberOfRacings={10}
+        lapSize={36} 
+        numberOfLaps={10} 
         teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
-        //teams={[mercedes, rbr, ferrari]}
         systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  
       />
     </div>

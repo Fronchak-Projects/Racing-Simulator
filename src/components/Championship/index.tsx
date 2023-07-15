@@ -167,7 +167,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                             { (status === 'FINISHED' && (i < 3)) ?
                                                 <TrophyIcon position={i + 1 as 1 | 2 | 3} />
                                                 :
-                                                i + 1
+                                                `${i + 1}°`
                                             }
                                         </td>
                                         <td>
@@ -226,7 +226,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                             { (status === 'FINISHED' && i < 3) ?
                                                 <TrophyIcon position={i + 1 as 1 | 2 | 3} />
                                                 :
-                                                i + 1
+                                                `${i + 1}°`
                                             }
                                         </td>
                                         <td>
