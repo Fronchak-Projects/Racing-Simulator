@@ -1,0 +1,7 @@
+.situation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 1em;
+}

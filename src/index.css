@@ -15,3 +15,25 @@
 .bronze-color {
     color: var(--bronze-color);
 }
+
+.classification-column {
+    width: 100px;
+}
+
+.pontuation-column {
+    width: 85px;
+}
+
+.situation-column {
+    width: 85px;
+}
+
+.classification-position {
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+.classification-pontuation {
+    font-weight: bold;
+    font-size: 1.4em; 
+}

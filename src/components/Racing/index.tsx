@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Driver from "../../types/Driver";
 import RacingDriver from '../../types/RacingDriver';
 import Speedway from '../Speedway';
@@ -9,15 +9,17 @@ import CarIcon from '../CarIcon';
 import Team from '../../types/Team';
 import RacingTeam from '../../types/RacingTeam';
 import './style.css';
+import RacingPoints from '../../types/RacingPoints';
 
 type Props = {
     numberOfLaps: number;
     lapSize: number;
     teams: Array<Team>;
     systemPoints: Array<number>;
+    setRacingPoints: (racingPoints: Array<RacingPoints>) => void
 }
 
-const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
+const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }: Props) => {
 
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>(() => teams
@@ -35,13 +37,19 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                 team,
                 position: undefined
             })));
+    const ciclo = useRef<number>(0);
     const speedWayLength = lapSize * numberOfLaps;
     const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.status === 'FINISHED');
     const hasFinished = racingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED');
 
+    if(hasFinished) {
+        console.log('has finished')
+        clearInterval(ciclo.current);
+    }
+
     const initRace = () => {
         setHasStarted(true);
-        const ciclo = setInterval(() => {
+        ciclo.current = setInterval(() => {
             setRacingDrivers((prevState) => {
                 const finishingRacingDrivers: Array<RacingDriver> = [];
                 const nextRacingDrivers = prevState.map((racingDriver) => {
@@ -58,9 +66,12 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                         return racingDriver;
                     }
                 });
-    
+
                 if(finishingRacingDrivers.length >= 1) {
+                    console.log('Before finishingRacingDrivers');
+                    console.log(finishingRacingDrivers);
                     const driversFinished = prevState.filter((racingDriver) => racingDriver.status === 'FINISHED').length;
+                    console.log(`driversFinished: ${driversFinished}`);
                     finishingRacingDrivers
                         .sort((a, b) => 
                             a.lastPosition == b.lastPosition ? 
@@ -85,10 +96,15 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                             racingDriver.points = systemPoints[racingDriver.racingPosition - 1];
                         }
                     })
+                    console.log('After finishingRacingDrivers');
+                    console.log(finishingRacingDrivers);
                 }
 
-                if(nextRacingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED')) {
-                    clearInterval(ciclo);
+                //if(nextRacingDrivers.every((racingDriver) => racingDriver.status === 'FINISHED')) {
+                //    console.log('Clear interval');
+                //    console.log(nextRacingDrivers);
+                //    clearInterval(ciclo);
+                    /*
                     const nextRacingTeams: Array<RacingTeam> = racingTeams.map((racingTeam) => {
                         const points = nextRacingDrivers.filter((racingDriver) => racingDriver.driver.team.id === racingTeam.team.id)
                             .reduce((prev, curr) => prev + curr.points , 0);
@@ -114,15 +130,23 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                         }
                     });
                     setRacingTeams(nextRacingTeams);
-                }
+                    */
+                //}
                 return nextRacingDrivers;
             });
-        }, 500);
+        }, 250);
+    }
+
+    const handleSetPoints = () => {
+        setRacingPoints(racingDrivers.map((racingDriver) => ({
+            driver: racingDriver.driver,
+            points: racingDriver.points
+        })));
     }
 
     return (
         <div>
-            <h1>Drivers:</h1>
+            <h1>Positions:</h1>
             <DriverCardsContainer 
                 drivers={[...racingDrivers].sort((a, b) => {
                     if(a.racingPosition && b.racingPosition) {
@@ -136,6 +160,9 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints }: Props) => {
                 }
             />
             { !hasStarted && <button className="btn btn-primary my-3" onClick={initRace}>Start race</button>} 
+            { hasFinished && (
+                <button className="btn btn-primary mb-3" onClick={handleSetPoints}>Go to championship classification</button>
+            ) }
             { !hasFinished && <Speedway  
                 lapSize={lapSize}
                 numberOfLaps={numberOfLaps}

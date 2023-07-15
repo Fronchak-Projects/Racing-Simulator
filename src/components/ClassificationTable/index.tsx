@@ -1,5 +1,4 @@
 import TrophyIcon from "../TrophyIcon";
-import './style.css';
 
 type Props = {
     descriptionHeader: string;
@@ -19,7 +18,6 @@ const ClassificationTable = ({ descriptionHeader, classificationItens }: Props) 
                     <th scope="col">{ descriptionHeader }</th>
                     <th scope="col" className="pontuation-column">Pontuação</th>
                 </tr>
-
             </thead>
             <tbody className="table-group-divider">
                 { classificationItens.sort((a, b) => a.classification - b.classification).map((item, i) => (
