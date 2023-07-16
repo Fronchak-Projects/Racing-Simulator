@@ -9,7 +9,6 @@ import RacingPoints from '../../types/RacingPoints';
 import ChampionshipDriver from '../../types/ChampionshipDriver';
 import TrophyIcon from '../TrophyIcon';
 import TableTitle from '../TableTitle';
-import './style.css';
 import TeamRacingClassification from '../../types/TeamRacingClassification';
 
 type Props = {
@@ -56,8 +55,6 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         }))
     );
 
-    const hasFinished = racingNumber === numberOfRacings;
-
     const startChampionship = () => {
         setStatus('RACING');
         setRacingNumber(1);
@@ -79,7 +76,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             }
         });
         setChampionShipTeams(nextChampionshipTeams);
-        if(hasFinished) {
+        if(racingNumber === numberOfRacings) {
             setStatus('FINISHED');
         }
         else {
