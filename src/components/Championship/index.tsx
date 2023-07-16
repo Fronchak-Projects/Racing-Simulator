@@ -33,6 +33,7 @@ type ChampionshipDriverTable = {
 type ChampionshipTeamTable = {
     team: Team,
     points: number;
+    racingClassifications: Array<number>;
     numberOfFirstPlaces: number;
     numberOfSecondPlaces: number;
     numberOfThirdPlaces: number;
@@ -117,11 +118,10 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 numberOfFirstPlaces,
                 numberOfSecondPlaces,
                 numberOfThirdPlaces,
-                drivers: teamDrivers
+                drivers: teamDrivers,
+                racingClassifications: racingPositions
             }
-        }).sort((teamA, teamB) => {
-            return teamB.points - teamA.points;
-        })
+        }).sort(compareTeams)
 
         if(racingNumber > 1) {
             const prevDriver: Array<ChampionshipDriverTable> = championshipTeams.reduce((prev: Array<ChampionshipDriver>, curr) => {
@@ -140,18 +140,18 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             const prevTeamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
                 const teamDrivers: Array<ChampionshipDriverTable> = prevDriver.filter((driver) => driver.driver.team.id === team.id);
                 const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
-    
+                const racingPositions: Array<number> = championshipTeams.find((c) => c.team.id === team.id)!.racingPositions;
+
                 return {
                     team,
                     points,
                     numberOfFirstPlaces: 0,
                     numberOfSecondPlaces: 0,
                     numberOfThirdPlaces: 0,
-                    drivers: teamDrivers
+                    drivers: teamDrivers,
+                    racingClassifications: racingPositions
                 }
-            }).sort((teamA, teamB) => {
-                return teamB.points - teamA.points;
-            })
+            }).sort(compareTeams)
 
             drivers.forEach((driver, i) => {
                 driver.situation = prevDriver.findIndex((prevDriver) => prevDriver.driver.id === driver.driver.id) - i;
@@ -340,6 +340,23 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         return compareDriversBasedOnNthRacingPositions(driverA, driverB, nthPosition + 1);
     }
 
+    const compareTeams = (teamA: ChampionshipTeamTable, teamB: ChampionshipTeamTable): number => {
+        if(teamA.points === teamB.points) {
+            return compareTeamsBasedOnRacingPositions(teamA, teamB, 1);
+        }
+        return teamB.points - teamA.points;
+    }
+
+    const compareTeamsBasedOnRacingPositions = (teamA: ChampionshipTeamTable, teamB: ChampionshipTeamTable, racingPosition: number): number => {
+        if(racingPosition > teams.length) return 0;
+        const teamANthPositions = teamA.racingClassifications.filter((p) => p === racingPosition).length;
+        const teamBNthPositions = teamB.racingClassifications.filter((p) => p === racingPosition).length;
+        if(teamANthPositions === teamBNthPositions) {
+            return compareTeamsBasedOnRacingPositions(teamA, teamB, racingPosition + 1);
+        }
+        return teamBNthPositions - teamANthPositions;
+    }
+  
     const handleGoToNextRacing = () => {
         setStatus('RACING');
         setRacingNumber((prevState) => prevState + 1);
