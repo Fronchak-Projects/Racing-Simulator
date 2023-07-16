@@ -7,9 +7,9 @@ import Racing from '../Racing';
 import Driver from '../../types/Driver';
 import RacingPoints from '../../types/RacingPoints';
 import ChampionshipDriver from '../../types/ChampionshipDriver';
-import TrophyIcon from '../TrophyIcon';
 import TableTitle from '../TableTitle';
 import TeamRacingClassification from '../../types/TeamRacingClassification';
+import ChampionshipTable from '../ChampionshipTable';
 
 type Props = {
     numberOfRacings: number;
@@ -164,153 +164,43 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 <div className="row">
                     <div className="col-12 col-lg-6">
                         <TableTitle title='Drivers' />
-                        <table className="table table-dark align-middle table-striped table-sm my-table">
-                            <thead className="align-middle">
-                                <tr>
-                                    <th scope="col" >Classificação</th>
-                                    <th scope="col" className="description-header">Driver</th>
-                                    <th scope="col">Pontuação</th>
-                                    <th scope="col">
-                                        <TrophyIcon position={1} />
-                                    </th>
-                                    <th scope="col">
-                                        <TrophyIcon position={2} />
-                                    </th>
-                                    <th scope="col">
-                                        <TrophyIcon position={3} />
-                                    </th>
-                                    <th scope="col">Situação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { drivers.map((driver, i) => (
-                                    <tr key={i}>
-                                        <td>
-                                            { (status === 'FINISHED' && (i < 3)) ?
-                                                <TrophyIcon position={i + 1 as 1 | 2 | 3} />
-                                                :
-                                                `${i + 1}°`
-                                            }
-                                        </td>
-                                        <td className="description-cell">
-                                            <div>
-                                                <span 
-                                                    style={{
-                                                        color: driver.driver.team.color
-                                                    }}
-                                                    >{ driver.driver.name }
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            { driver.points }
-                                        </td>
-                                        <td> 
-                                            { driver.numberOfFirstPlaces ? driver.numberOfFirstPlaces : '-' }
-                                        </td>
-                                        <td> 
-                                            { driver.numberOfSecondPlaces ? driver.numberOfSecondPlaces : '-' }
-                                        </td>
-                                        <td > 
-                                            { driver.numberOfThirdPlaces ? driver.numberOfThirdPlaces : '-' }
-                                        </td>
-                                        <td>
-                                            <div className="situation-container">
-                                            {
-                                                driver.situation ?
-                                                    driver.situation > 0 ?
-                                                        <>
-                                                            <i className="bi bi-caret-up-fill text-success"></i>
-                                                            <span className="text-success">{ driver.situation }</span>
-                                                        </>
-                                                        :
-                                                        <>
-                                                            <i className="bi bi-caret-down-fill text-danger"></i>
-                                                            <span className="text-danger">{ -1 * driver.situation }</span>
-                                                        </>
-                                                :
-                                                '-'
-                                            }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )) }
-                            </tbody>
-                        </table>
+                        <ChampionshipTable 
+                            descriptionHeader="Driver"
+                            showThophyIcon={ status === 'FINISHED' }
+                            rows={ drivers.map((driver) => ({
+                                points: driver.points,
+                                firstPlaces: driver.numberOfFirstPlaces,
+                                secondPlaces: driver.numberOfSecondPlaces,
+                                thirdPlaces: driver.numberOfThirdPlaces,
+                                situation: driver.situation,
+                                description: <span 
+                                    style={{
+                                        color: driver.driver.team.color
+                                    }}
+                                    >{ driver.driver.name }
+                                </span>
+                            })) }
+                        />
                     </div>
                     <div className="col-12 col-lg-6">
                         <TableTitle title='Teams' />
-                        <table className="table table-dark align-middle table-striped table-sm my-table">
-                            <thead className="align-middle">
-                                <tr>
-                                    <th scope="col">Classificação</th>
-                                    <th scope="col" className="description-header">Team</th>
-                                    <th scope="col">Pontuação</th>
-                                    <th scope="col">
-                                        <TrophyIcon position={1} />
-                                    </th>
-                                    <th scope="col">
-                                        <TrophyIcon position={2} />
-                                    </th>
-                                    <th scope="col">
-                                        <TrophyIcon position={3} />
-                                    </th>
-                                    <th scope="col">Situação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { teamsTable.map((team, i) => (
-                                    <tr key={i}>
-                                        <td>
-                                            { (status === 'FINISHED' && i < 3) ?
-                                                <TrophyIcon position={i + 1 as 1 | 2 | 3} />
-                                                :
-                                                `${i + 1}°`
-                                            }
-                                        </td>
-                                        <td className="description-cell">
-                                            <span 
-                                                style={{
-                                                    color: team.team.color
-                                                }}
-                                            >{ team.team.name }
-                                            </span>
-                                        </td>
-                                        <td>
-                                            { team.points }
-                                        </td>
-                                        <td>
-                                            { team.numberOfFirstPlaces ? team.numberOfFirstPlaces : '-' }
-                                        </td>
-                                        <td>
-                                            { team.numberOfSecondPlaces ? team.numberOfSecondPlaces : '-' }
-                                        </td>
-                                        <td>
-                                            { team.numberOfThirdPlaces ? team.numberOfThirdPlaces : '-' }
-                                        </td>
-                                        <td >
-                                            <div className="situation-container">
-                                            {
-                                                team.situation ?
-                                                    team.situation > 0 ?
-                                                        <>
-                                                            <i className="bi bi-caret-up-fill text-success"></i>
-                                                            <span className="text-success">{ team.situation }</span>
-                                                        </>
-                                                        :
-                                                        <>
-                                                            <i className="bi bi-caret-down-fill text-danger"></i>
-                                                            <span className="text-danger">{ -1 * team.situation }</span>
-                                                        </>
-                                                :
-                                                '-'
-                                            }
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )) }
-                            </tbody>
-                        </table>
+                        <ChampionshipTable 
+                            descriptionHeader="Team"
+                            showThophyIcon={ status === 'FINISHED' }
+                            rows={teamsTable.map((team) => ({
+                                points: team.points,
+                                firstPlaces: team.numberOfFirstPlaces,
+                                secondPlaces: team.numberOfSecondPlaces,
+                                thirdPlaces: team.numberOfThirdPlaces,
+                                situation: team.situation,
+                                description: <span 
+                                    style={{
+                                        color: team.team.color
+                                    }}
+                                >{ team.team.name }
+                                </span>
+                            }))}
+                        />
                     </div>
                 </div>
             </div>
