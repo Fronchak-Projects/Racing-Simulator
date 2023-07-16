@@ -101,14 +101,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 numberOfSecondPlaces,
                 numberOfThirdPlaces
             }
-        }).sort((a, b) => {
-            if(a.points === b.points) {
-                const racingAWons = a.racingPoints.filter((p) => p === systemPoints[0]).length;
-                const racingBWons = b.racingPoints.filter((p) => p === systemPoints[0]).length;
-                return racingBWons - racingAWons;
-            }
-            return b.points - a.points
-        });
+        }).sort(compareDrivers);
 
         const teamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
             const teamDrivers: Array<ChampionshipDriverTable> = drivers.filter((driver) => driver.driver.team.id === team.id);
@@ -142,14 +135,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                     numberOfSecondPlaces: 0,
                     numberOfThirdPlaces: 0
                 }
-            }).sort((a, b) => {
-                if(a.points === b.points) {
-                    const racingAWons = a.racingPoints.filter((p) => p === systemPoints[0]).length;
-                    const racingBWons = b.racingPoints.filter((p) => p === systemPoints[0]).length;
-                    return racingBWons - racingAWons;
-                }
-                return b.points - a.points
-            });
+            }).sort(compareDrivers);
 
             const prevTeamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
                 const teamDrivers: Array<ChampionshipDriverTable> = prevDriver.filter((driver) => driver.driver.team.id === team.id);
@@ -332,6 +318,26 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 </div>
             </div>
         )
+    }
+
+    const compareDrivers = (driverA: ChampionshipDriverTable, driverB: ChampionshipDriverTable): number => {
+        if(driverA.points === driverB.points) {
+            return compareDriversBasedOnNthRacingPositions(driverA, driverB, 0);
+        }
+        return driverB.points - driverA.points;
+    }
+
+    const compareDriversBasedOnNthRacingPositions = (driverA: ChampionshipDriverTable, driverB: ChampionshipDriverTable, nthPosition: number): number => {
+        if(nthPosition >= systemPoints.length) {
+            return 0;
+        }
+        const points = systemPoints[nthPosition];
+        const driverANthPositions = driverA.racingPoints.filter((p) => p === points).length;
+        const driverBNthPositions = driverB.racingPoints.filter((p) => p === points).length;
+        if(driverANthPositions !== driverBNthPositions) {
+            return driverBNthPositions - driverANthPositions;
+        }
+        return compareDriversBasedOnNthRacingPositions(driverA, driverB, nthPosition + 1);
     }
 
     const handleGoToNextRacing = () => {
