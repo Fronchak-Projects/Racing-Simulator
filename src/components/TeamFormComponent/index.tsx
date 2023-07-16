@@ -5,10 +5,11 @@ import './style.css';
 type Props = {
     teamForm: TeamForm
     index: number,
-    onTeamFormChange: (nextTeamForm: TeamForm, index: number) => void
+    onTeamFormChange: (nextTeamForm: TeamForm, index: number) => void,
+    onDelete: (index: number) => void
 }
 
-const TeamFormComponent = ({ teamForm, index, onTeamFormChange }: Props) => {
+const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Props) => {
     
     const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const nextTeamForm: TeamForm = {
@@ -48,7 +49,7 @@ const TeamFormComponent = ({ teamForm, index, onTeamFormChange }: Props) => {
                     />
                 </div>
                 <div className="col-1 text-end">
-                    <i className="bi bi-trash-fill fs-5"></i>
+                    <i className="bi bi-trash-fill fs-5" onClick={() => onDelete(index)}></i>
                 </div>
                 <div className="col-6">
                     <div className="text-center mb-2">

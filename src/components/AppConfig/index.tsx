@@ -13,7 +13,8 @@ type Props = {
     onLapLengthChange: (nextLapLength: number) => void;
     onSpeedChange: (nextSpeed: number) => void;
     onTeamChange: (nextTeam: TeamForm, index: number) => void;
-    onAddTeam: () => void
+    onAddTeam: () => void,
+    onRemoveTeam: (index: number) => void
 }
 
 const AppConfig = ({ 
@@ -22,7 +23,7 @@ const AppConfig = ({
         lapLength, onLapLengthChange,
         speed, onSpeedChange,
         teams, onTeamChange,
-        onAddTeam
+        onAddTeam, onRemoveTeam
     }: Props) => {
     
     const handleNumberOfRacingsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +143,7 @@ const AppConfig = ({
                             teamForm={team}
                             index={index}
                             onTeamFormChange={onTeamChange}
+                            onDelete={onRemoveTeam}
                         />
                     </div>
                 )) }

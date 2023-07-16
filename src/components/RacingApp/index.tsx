@@ -6,6 +6,7 @@ import Team from "../../types/Team";
 import RacingAppStatus from '../../types/RacingAppStatus';
 import AppConfig from '../AppConfig';
 import TeamForm from '../../types/TeamForm';
+import { generateRandomColor } from '../../utils/ColorUtils';
 
 const rbr: Team = {
   id: 1,
@@ -228,7 +229,7 @@ const RacingApp = () => {
   const [championshipId, setChampionshipId] = useState<number>(0);
   const [teams, setTeams] = useState<Array<TeamForm>>([
     {
-      color: "#476117",
+      color: generateRandomColor(),
       name: '',
       drivers: ['', '']
     }
@@ -259,10 +260,19 @@ const RacingApp = () => {
       return [
         ...prevState,
         {
-          color: '#146157',
+          color: generateRandomColor(),
           name: '',
           drivers: ['', '']
         }
+      ]
+    })
+  }
+
+  const handleRemoveTeam = (index: number) => {
+    setTeams((prevState) => {
+      return [
+        ...prevState.slice(0, index),
+        ...prevState.slice(index + 1)
       ]
     })
   }
@@ -287,6 +297,7 @@ const RacingApp = () => {
           teams={teams}
           onTeamChange={handleTeamChange}
           onAddTeam={handleAddTeam}
+          onRemoveTeam={handleRemoveTeam}
         />
       }
       { status === 'STARTED' && (
