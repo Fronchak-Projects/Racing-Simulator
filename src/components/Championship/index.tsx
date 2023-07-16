@@ -84,7 +84,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         }
     }
 
-    const driversTable = () => {
+    const classificationsTables = () => {
         const drivers: Array<ChampionshipDriverTable> = championshipTeams.reduce((prev: Array<ChampionshipDriver>, curr) => {
             return [...prev, ...curr.championshipDrivers]
         }, []).map((championshipDriver) => {
@@ -283,7 +283,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 { status !== 'FINISHED' && (
                     <button className="mb-3 btn btn-primary" onClick={handleGoToNextRacing}>Go to next racing</button>
                 ) }
-                { driversTable() }
+                { classificationsTables() }
             </>
         ) }
     </>
