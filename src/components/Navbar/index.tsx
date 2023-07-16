@@ -25,10 +25,8 @@ const Navbar = ({ onStartClick, onConfigClick }: Props) => {
                             >Start championship</button>
                         </li>
                     </ul>
-                    <div className="config-icon-container">
-                        <i className="bi bi-gear-fill"
-                            onClick={onConfigClick}
-                        ></i>
+                    <div className="config-icon-container" onClick={onConfigClick}>
+                        <i className="bi bi-gear-fill"></i>
                     </div>
                 </div>
             </div>

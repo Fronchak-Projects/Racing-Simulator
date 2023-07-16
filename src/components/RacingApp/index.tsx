@@ -5,6 +5,7 @@ import Driver from "../../types/Driver";
 import Team from "../../types/Team";
 import RacingAppStatus from '../../types/RacingAppStatus';
 import AppConfig from '../AppConfig';
+import TeamForm from '../../types/TeamForm';
 
 const rbr: Team = {
   id: 1,
@@ -225,6 +226,13 @@ const RacingApp = () => {
   const [status, setStatus] = useState<RacingAppStatus>('NOT_START');
   const [showConfig, setShowConfig] = useState<boolean>(true);
   const [championshipId, setChampionshipId] = useState<number>(0);
+  const [teams, setTeams] = useState<Array<TeamForm>>([
+    {
+      color: "#476117",
+      name: '',
+      drivers: ['', '']
+    }
+  ]);
 
   const handleStartClick = () => {
     setStatus('STARTED');
@@ -234,6 +242,29 @@ const RacingApp = () => {
 
   const handleConfigClick = () => {
     setShowConfig((prevState) => !prevState);
+  }
+
+  const handleTeamChange = (nextTeam: TeamForm, index: number) => {
+    setTeams((prevState) => {
+      return [
+        ...prevState.slice(0, index),
+        nextTeam,
+        ...prevState.slice(index + 1)
+      ]
+    })
+  }
+
+  const handleAddTeam = () => {
+    setTeams((prevState) => {
+      return [
+        ...prevState,
+        {
+          color: '#146157',
+          name: '',
+          drivers: ['', '']
+        }
+      ]
+    })
   }
 
   return (
@@ -253,6 +284,9 @@ const RacingApp = () => {
           onNumberOfLapsChange={setNumberOfLaps}
           onLapLengthChange={setLapLength}
           onSpeedChange={setSpeed}
+          teams={teams}
+          onTeamChange={handleTeamChange}
+          onAddTeam={handleAddTeam}
         />
       }
       { status === 'STARTED' && (

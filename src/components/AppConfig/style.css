@@ -1,0 +1,10 @@
+.add-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-container i.bi {
+    font-size: 5em;
+    cursor: pointer;
+}

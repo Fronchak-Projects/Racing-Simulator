@@ -1,19 +1,28 @@
+import TeamForm from "../../types/TeamForm";
+import TeamFormComponent from "../TeamFormComponent";
+import './style.css';
+
 type Props = {
     numberOfRacings: number;
     numberOfLaps: number;
     lapLength: number;
     speed: number;
+    teams: Array<TeamForm>
     onNumberOfRacingsChange: (nextNumberOfRacings: number) => void;
     onNumberOfLapsChange: (nextNumberOfLaps: number) => void;
     onLapLengthChange: (nextLapLength: number) => void;
     onSpeedChange: (nextSpeed: number) => void;
+    onTeamChange: (nextTeam: TeamForm, index: number) => void;
+    onAddTeam: () => void
 }
 
 const AppConfig = ({ 
         numberOfRacings, onNumberOfRacingsChange,
         numberOfLaps, onNumberOfLapsChange,
         lapLength, onLapLengthChange,
-        speed, onSpeedChange
+        speed, onSpeedChange,
+        teams, onTeamChange,
+        onAddTeam
     }: Props) => {
     
     const handleNumberOfRacingsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +132,21 @@ const AppConfig = ({
                             <span className="input-group-text" id="speed-addon">ms</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <h2 className="mb-3">Configure the teams</h2>
+            <div className="row g-3">
+                { teams.map((team, index) => (
+                    <div className="col-6 col-md-3">
+                        <TeamFormComponent 
+                            teamForm={team}
+                            index={index}
+                            onTeamFormChange={onTeamChange}
+                        />
+                    </div>
+                )) }
+                <div className="col-6 col-md-3 add-container">
+                    <i className="bi bi-plus-circle" onClick={onAddTeam}></i>
                 </div>
             </div>
         </div>

@@ -1,0 +1,7 @@
+input.form-control::placeholder {
+    color: #CCC;
+}
+
+div.col-6 i {
+    font-size: 2em;
+}
