@@ -10,6 +10,7 @@ import ChampionshipDriver from '../../types/ChampionshipDriver';
 import TrophyIcon from '../TrophyIcon';
 import TableTitle from '../TableTitle';
 import './style.css';
+import TeamRacingClassification from '../../types/TeamRacingClassification';
 
 type Props = {
     numberOfRacings: number;
@@ -32,6 +33,9 @@ type ChampionshipDriverTable = {
 type ChampionshipTeamTable = {
     team: Team,
     points: number;
+    numberOfFirstPlaces: number;
+    numberOfSecondPlaces: number;
+    numberOfThirdPlaces: number;
     drivers: Array<ChampionshipDriverTable>;
     situation?: number;
 }
@@ -46,7 +50,8 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             championshipDrivers: team.drivers.map((driver) => ({
                 driver: driver,
                 racingPoints: []
-            }))
+            })),
+            racingPositions: []
         }))
     );
 
@@ -57,8 +62,9 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         setRacingNumber(1);
     }
 
-    const setRacingPoints = (points: Array<RacingPoints>) => {
+    const handleRacingResults = (points: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => {
         const nextChampionshipTeams: Array<ChampionshipTeam> = championshipTeams.map((championshipTeam) => {
+            const racingPosition = teamsClassifications.find((teamClassificatio) => teamClassificatio.team.id === championshipTeam.team.id)?.racingPosition as number;
             return {
                 team: championshipTeam.team,
                 championshipDrivers: championshipTeam.championshipDrivers.map((championshipDriver) => {
@@ -67,7 +73,8 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                         ...championshipDriver,
                         racingPoints: [...championshipDriver.racingPoints, racingPoints]
                     }
-                })
+                }),
+                racingPositions: [...championshipTeam.racingPositions, racingPosition]
             }
         });
         setChampionShipTeams(nextChampionshipTeams);
@@ -106,10 +113,17 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         const teamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
             const teamDrivers: Array<ChampionshipDriverTable> = drivers.filter((driver) => driver.driver.team.id === team.id);
             const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
+            const racingPositions: Array<number> = championshipTeams.find((c) => c.team.id === team.id)!.racingPositions;
+            const numberOfFirstPlaces = racingPositions.filter((pos) => pos === 1).length;
+            const numberOfSecondPlaces = racingPositions.filter((pos) => pos === 2).length;
+            const numberOfThirdPlaces = racingPositions.filter((pos) => pos === 3).length;
 
             return {
                 team,
                 points,
+                numberOfFirstPlaces,
+                numberOfSecondPlaces,
+                numberOfThirdPlaces,
                 drivers: teamDrivers
             }
         }).sort((teamA, teamB) => {
@@ -144,6 +158,9 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 return {
                     team,
                     points,
+                    numberOfFirstPlaces: 0,
+                    numberOfSecondPlaces: 0,
+                    numberOfThirdPlaces: 0,
                     drivers: teamDrivers
                 }
             }).sort((teamA, teamB) => {
@@ -246,6 +263,15 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                     <th scope="col">Classificação</th>
                                     <th scope="col" className="description-header">Team</th>
                                     <th scope="col">Pontuação</th>
+                                    <th scope="col">
+                                        <TrophyIcon position={1} />
+                                    </th>
+                                    <th scope="col">
+                                        <TrophyIcon position={2} />
+                                    </th>
+                                    <th scope="col">
+                                        <TrophyIcon position={3} />
+                                    </th>
                                     <th scope="col">Situação</th>
                                 </tr>
                             </thead>
@@ -269,6 +295,15 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                                         </td>
                                         <td>
                                             { team.points }
+                                        </td>
+                                        <td>
+                                            { team.numberOfFirstPlaces ? team.numberOfFirstPlaces : '-' }
+                                        </td>
+                                        <td>
+                                            { team.numberOfSecondPlaces ? team.numberOfSecondPlaces : '-' }
+                                        </td>
+                                        <td>
+                                            { team.numberOfThirdPlaces ? team.numberOfThirdPlaces : '-' }
                                         </td>
                                         <td >
                                             <div className="situation-container">
@@ -321,7 +356,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                     numberOfLaps={numberOfLaps}
                     systemPoints={systemPoints}
                     teams={[...teams]}
-                    setRacingPoints={setRacingPoints}
+                    setRacingResulst={handleRacingResults}
                 />
             </>
         ) }

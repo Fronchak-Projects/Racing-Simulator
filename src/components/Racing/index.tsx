@@ -8,6 +8,7 @@ import ClassificationTable from '../ClassificationTable';
 import Team from '../../types/Team';
 import RacingPoints from '../../types/RacingPoints';
 import TableTitle from '../TableTitle';
+import TeamRacingClassification from '../../types/TeamRacingClassification';
 
 type TeamRacingTable = {
     team: Team;
@@ -20,10 +21,10 @@ type Props = {
     lapSize: number;
     teams: Array<Team>;
     systemPoints: Array<number>;
-    setRacingPoints: (racingPoints: Array<RacingPoints>) => void
+    setRacingResulst: (racingPoints: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => void
 }
 
-const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }: Props) => {
+const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingResulst }: Props) => {
 
     const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>(() => teams
             .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
@@ -109,10 +110,18 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingPoints }:
     }
 
     const handleSetPoints = () => {
-        setRacingPoints(racingDrivers.map((racingDriver) => ({
+        const racingPoints: Array<RacingPoints> = racingDrivers.map((racingDriver) => ({
             driver: racingDriver.driver,
             points: racingDriver.points
-        })));
+        }));
+        const teamRacingClassification: Array<TeamRacingClassification> = getTeamRacingTable()
+            .map((teamTable, i) => {
+                return {
+                    team: teamTable.team,
+                    racingPosition: i + 1
+                }
+            })
+            setRacingResulst(racingPoints, teamRacingClassification);
     }
 
     return (
