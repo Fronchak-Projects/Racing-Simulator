@@ -19,12 +19,13 @@ type TeamRacingTable = {
 type Props = {
     numberOfLaps: number;
     lapSize: number;
+    speed: number;
     teams: Array<Team>;
     systemPoints: Array<number>;
     setRacingResulst: (racingPoints: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => void
 }
 
-const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingResulst }: Props) => {
+const Racing = ({ numberOfLaps, lapSize, speed, teams, systemPoints, setRacingResulst }: Props) => {
 
     const [racingDrivers, setRacingDrivers] = useState<Array<RacingDriver>>(() => teams
             .reduce((prev: Array<Driver>, curr) => [...prev, ...curr.drivers], [])
@@ -80,12 +81,12 @@ const Racing = ({ numberOfLaps, lapSize, teams, systemPoints, setRacingResulst }
                     return prevState;
                 }
             });
-        }, 250);
+        }, speed);
 
         return () => {
             clearInterval(ciclo.current);
         }
-    }, [speedWayLength, systemPoints]);
+    }, [speedWayLength, systemPoints, speed]);
 
     if(hasFinished) {
         clearInterval(ciclo.current);

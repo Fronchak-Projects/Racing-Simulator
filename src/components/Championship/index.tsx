@@ -14,7 +14,8 @@ import ChampionshipTable from '../ChampionshipTable';
 type Props = {
     numberOfRacings: number;
     numberOfLaps: number;
-    lapSize: number;
+    lapLength: number;
+    speed: number;
     teams: Array<Team>;
     systemPoints: Array<number>;
 }
@@ -40,7 +41,7 @@ type ChampionshipTeamTable = {
     situation?: number;
 }
 
-const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoints }: Props) => {
+const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, systemPoints }: Props) => {
 
     const [status, setStatus] = useState<ChampionshipStatus>('RACING');
     const [racingNumber, setRacingNumber] = useState<number>(1);
@@ -55,6 +56,9 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
         }))
     );
     const refNumberOfRacings = useRef<number>(numberOfRacings);
+    const refNumberOfLaps = useRef<number>(numberOfLaps);
+    const refLapLength = useRef<number>(lapLength);
+    const refSpeed = useRef<number>(speed);
 
     const handleRacingResults = (points: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => {
         const nextChampionshipTeams: Array<ChampionshipTeam> = championshipTeams.map((championshipTeam) => {
@@ -256,8 +260,9 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             <>
                 <h1 className="mb-3">Racing { racingNumber }/{ refNumberOfRacings.current }</h1>
                 <Racing 
-                    lapSize={lapSize}
-                    numberOfLaps={numberOfLaps}
+                    lapSize={refLapLength.current}
+                    numberOfLaps={refNumberOfLaps.current}
+                    speed={refSpeed.current}
                     systemPoints={systemPoints}
                     teams={[...teams]}
                     setRacingResulst={handleRacingResults}

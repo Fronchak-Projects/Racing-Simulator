@@ -218,7 +218,10 @@ alphaTauri.drivers = [yuki, nyck];
 
 const RacingApp = () => {
 
-  const [numberOfRacings, setNumberOfRacings] = useState<number>(2);
+  const [numberOfRacings, setNumberOfRacings] = useState<number>(10);
+  const [numberOfLaps, setNumberOfLaps] = useState<number>(10);
+  const [lapLength, setLapLength] = useState<number>(36);
+  const [speed, setSpeed] = useState<number>(500);
   const [status, setStatus] = useState<RacingAppStatus>('NOT_START');
   const [showConfig, setShowConfig] = useState<boolean>(true);
   const [championshipId, setChampionshipId] = useState<number>(0);
@@ -243,7 +246,13 @@ const RacingApp = () => {
       { showConfig && 
         <AppConfig 
           numberOfRacings={numberOfRacings}
+          numberOfLaps={numberOfLaps}
+          lapLength={lapLength}
+          speed={speed}
           onNumberOfRacingsChange={setNumberOfRacings}
+          onNumberOfLapsChange={setNumberOfLaps}
+          onLapLengthChange={setLapLength}
+          onSpeedChange={setSpeed}
         />
       }
       { status === 'STARTED' && (
@@ -251,8 +260,9 @@ const RacingApp = () => {
           <Championship 
             key={championshipId}
             numberOfRacings={numberOfRacings}
-            lapSize={24} 
-            numberOfLaps={5} 
+            lapLength={lapLength} 
+            numberOfLaps={numberOfLaps} 
+            speed={speed}
             teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
             systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  
           />
