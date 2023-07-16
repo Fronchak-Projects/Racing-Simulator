@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Team from "../../types/Team";
 import ChampionshipTeam from '../../types/ChampionshipTeam';
 import ChampionshipStatus from '../../types/ChampionshipStatus';
@@ -42,8 +42,8 @@ type ChampionshipTeamTable = {
 
 const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoints }: Props) => {
 
-    const [status, setStatus] = useState<ChampionshipStatus>('NOT_STARTED');
-    const [racingNumber, setRacingNumber] = useState<number>(0);
+    const [status, setStatus] = useState<ChampionshipStatus>('RACING');
+    const [racingNumber, setRacingNumber] = useState<number>(1);
     const [championshipTeams, setChampionShipTeams] = useState<Array<ChampionshipTeam>>(() => teams
         .map((team) => ({
             team: team,
@@ -54,11 +54,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             racingPositions: []
         }))
     );
-
-    const startChampionship = () => {
-        setStatus('RACING');
-        setRacingNumber(1);
-    }
+    const refNumberOfRacings = useRef<number>(numberOfRacings);
 
     const handleRacingResults = (points: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => {
         const nextChampionshipTeams: Array<ChampionshipTeam> = championshipTeams.map((championshipTeam) => {
@@ -76,7 +72,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             }
         });
         setChampionShipTeams(nextChampionshipTeams);
-        if(racingNumber === numberOfRacings) {
+        if(racingNumber === refNumberOfRacings.current) {
             setStatus('FINISHED');
         }
         else {
@@ -254,13 +250,11 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
             <>
                 <TeamCardsContainer teams={teams} />
                 <hr />
-                <button className="btn btn-primary" onClick={startChampionship}>Start championship</button>
-            </>
-                
+            </>      
         ) }
         { status === 'RACING' && (
             <>
-                <h1 className="mb-3">Racing { racingNumber }/{ numberOfRacings }</h1>
+                <h1 className="mb-3">Racing { racingNumber }/{ refNumberOfRacings.current }</h1>
                 <Racing 
                     lapSize={lapSize}
                     numberOfLaps={numberOfLaps}
@@ -276,7 +270,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapSize, teams, systemPoi
                 <TeamCardsContainer teams={teams} />    
                 <hr />
                 { status === 'SUMMARY' ? 
-                    <h1 className="mb-3">Championship Classification - Racings {racingNumber}/{numberOfRacings}</h1>
+                    <h1 className="mb-3">Championship Classification - Racings {racingNumber}/{refNumberOfRacings.current}</h1>
                     :
                     <h1 className="mb-3">Championship Results</h1>
                 }
