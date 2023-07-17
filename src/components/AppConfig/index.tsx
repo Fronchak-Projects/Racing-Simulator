@@ -180,9 +180,9 @@ const AppConfig = ({
                     onClick={() => setTeams(europeTeams)}
                 >Use EU Football teams</button>
             </div>
-            <div className="row g-3">
+            <div className="teams-form-container">
                 { teams.map((team, index) => (
-                    <div className="col-6 col-md-3" key={index}>
+                    <div className="team-form-container" key={index}>
                         <TeamFormComponent 
                             teamForm={team}
                             index={index}
@@ -191,7 +191,7 @@ const AppConfig = ({
                         />
                     </div>
                 )) }
-                <div className="col-6 col-md-3 add-container">
+                <div className="team-form-container add-container">
                     <i className="bi bi-plus-circle" onClick={onAddTeam}></i>
                 </div>
             </div>

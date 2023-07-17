@@ -40,7 +40,7 @@ const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Prop
     }
 
     return (
-        <div className="container py-3 rounded-3" style={{
+        <div className="p-3 rounded-3" style={{
             border: `2px solid ${teamForm.color}`
         }}>
             <div className="row g-2 gy-4">
@@ -67,7 +67,7 @@ const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Prop
                 </div>
                 <div className="drivers-form-container">
                     { teamForm.drivers.map((driver, driverIndex) => (
-                        <div className="driver-form-container">
+                        <div className="driver-form-container" key={driverIndex}>
                             <div className="text-center mb-2">
                                 <CarIcon color={ teamForm.color } />
                             </div>

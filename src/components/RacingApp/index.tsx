@@ -13,7 +13,7 @@ const RacingApp = () => {
   const [numberOfLaps, setNumberOfLaps] = useState<number>(10);
   const [lapLength, setLapLength] = useState<number>(36);
   const [speed, setSpeed] = useState<number>(500);
-  const [numberOfDriverPerTeam, setNumberOfDriversPerTeam] = useState<number>(2);
+  const [numberOfDriverPerTeam, setNumberOfDriversPerTeam] = useState<number>(4);
   const [status, setStatus] = useState<RacingAppStatus>('NOT_START');
   const [showConfig, setShowConfig] = useState<boolean>(true);
   const [championshipId, setChampionshipId] = useState<number>(0);
@@ -21,7 +21,7 @@ const RacingApp = () => {
     {
       color: generateRandomColor(),
       name: '',
-      drivers: ['', '']
+      drivers: Array<string>(numberOfDriverPerTeam).fill('')
     }
   ]);
 
@@ -52,7 +52,7 @@ const RacingApp = () => {
         {
           color: generateRandomColor(),
           name: '',
-          drivers: ['', '']
+          drivers: Array<string>(numberOfDriverPerTeam).fill('')
         }
       ]
     })
@@ -65,6 +65,23 @@ const RacingApp = () => {
         ...prevState.slice(index + 1)
       ]
     })
+  }
+
+  const handleNumberOfDriversPerTeamChange = (nextNumberOfDriversPerTeam: number) => {
+    const nextTeams: Array<TeamForm> = teams.map((team) => {
+      const nextDrivers = Array<string>(nextNumberOfDriversPerTeam).fill('');
+      team.drivers.forEach((driverName, index) => {
+        if(index + 1 <= nextNumberOfDriversPerTeam) {
+          nextDrivers[index] = driverName
+        }
+      });
+      return {
+        ...team,
+        'drivers': nextDrivers
+      }
+    });
+    setNumberOfDriversPerTeam(nextNumberOfDriversPerTeam);
+    setTeams(nextTeams);
   }
 
   const championshipTeams: Team[] = teams.map((team, index) => {
@@ -105,7 +122,7 @@ const RacingApp = () => {
           onNumberOfLapsChange={setNumberOfLaps}
           onLapLengthChange={setLapLength}
           onSpeedChange={setSpeed}
-          onNumberOfDriversPerTeamChange={setNumberOfDriversPerTeam}
+          onNumberOfDriversPerTeamChange={handleNumberOfDriversPerTeamChange}
           teams={teams}
           onTeamChange={handleTeamChange}
           onAddTeam={handleAddTeam}

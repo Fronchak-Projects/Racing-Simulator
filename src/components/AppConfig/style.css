@@ -1,3 +1,20 @@
+.teams-form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.team-form-container {
+    flex: 1;
+    min-width: 220px;
+}
+
+@media (min-width: 420px) {
+    .team-form-container {
+        min-width: 400px;
+    } 
+}
+
 .add-container {
     display: flex;
     justify-content: center;
