@@ -9,11 +9,13 @@ type Props = {
     numberOfLaps: number;
     lapLength: number;
     speed: number;
+    numberOfDriversPerTeam: number;
     teams: Array<TeamForm>
     onNumberOfRacingsChange: (nextNumberOfRacings: number) => void;
     onNumberOfLapsChange: (nextNumberOfLaps: number) => void;
     onLapLengthChange: (nextLapLength: number) => void;
     onSpeedChange: (nextSpeed: number) => void;
+    onNumberOfDriversPerTeamChange: (nextNumberOfDriversPerTeam: number) => void;
     onTeamChange: (nextTeam: TeamForm, index: number) => void;
     onAddTeam: () => void,
     onRemoveTeam: (index: number) => void,
@@ -25,6 +27,7 @@ const AppConfig = ({
         numberOfLaps, onNumberOfLapsChange,
         lapLength, onLapLengthChange,
         speed, onSpeedChange,
+        numberOfDriversPerTeam, onNumberOfDriversPerTeamChange,
         teams, onTeamChange,
         onAddTeam, onRemoveTeam,
         setTeams
@@ -55,6 +58,13 @@ const AppConfig = ({
         const nextSpeed = Number.parseInt(event.target.value);
         if(!Number.isNaN(nextSpeed) && nextSpeed >= 100) {
             onSpeedChange(nextSpeed);
+        }
+    }
+
+    const handleNumberOfDriversPerTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const nextNumberOfDriversPerTeam = Number.parseInt(event.target.value);
+        if(!Number.isNaN(nextNumberOfDriversPerTeam) && nextNumberOfDriversPerTeam >= 1) {
+            onNumberOfDriversPerTeamChange(nextNumberOfDriversPerTeam);
         }
     }
 
@@ -100,7 +110,7 @@ const AppConfig = ({
                         </div>
                     </div>
                 </div>
-                <div className="col-6 col-md-3">
+                <div className="col-6 col-md-2">
                     <div className="mb-3">
                         <label htmlFor="lap-length" className="form-label">Lap length</label>
                         <div className="input-group">
@@ -119,7 +129,7 @@ const AppConfig = ({
                         </div>
                     </div>
                 </div>
-                <div className="col-6 col-md-3">
+                <div className="col-6 col-md-2">
                     <div className="mb-3">
                         <label htmlFor="speed" className="form-label">Speed</label>
                         <div className="input-group">
@@ -135,6 +145,27 @@ const AppConfig = ({
                                 onChange={handleSpeedChange}
                             />
                             <span className="input-group-text" id="speed-addon">ms</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-6 col-md-2">
+                    <div className="mb-3">
+                        <label htmlFor="drivers-per-team" className="form-label">Drivers per team</label>
+                        <div className="input-group">
+                            <input 
+                                id="drivers-per-team"
+                                type="number"
+                                step={1}
+                                min={1}
+                                className="form-control bg-dark text-white"
+                                aria-label="drivers per team"
+                                aria-describedby="number-of-drivers-per-team-addon"
+                                value={numberOfDriversPerTeam}
+                                onChange={handleNumberOfDriversPerTeamChange}
+                            />
+                            <span className="input-group-text" id="number-of-drivers-per-team-addon">
+                                { numberOfDriversPerTeam === 1 ? 'driver' : 'drivers' }
+                            </span>
                         </div>
                     </div>
                 </div>

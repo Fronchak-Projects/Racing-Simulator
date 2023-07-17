@@ -13,6 +13,7 @@ const RacingApp = () => {
   const [numberOfLaps, setNumberOfLaps] = useState<number>(10);
   const [lapLength, setLapLength] = useState<number>(36);
   const [speed, setSpeed] = useState<number>(500);
+  const [numberOfDriverPerTeam, setNumberOfDriversPerTeam] = useState<number>(2);
   const [status, setStatus] = useState<RacingAppStatus>('NOT_START');
   const [showConfig, setShowConfig] = useState<boolean>(true);
   const [championshipId, setChampionshipId] = useState<number>(0);
@@ -71,9 +72,9 @@ const RacingApp = () => {
       id: index,
       color: team.color,
       name: team.name,
-      drivers: []
+      drivers: Array(numberOfDriverPerTeam).fill('')
     }
-  })
+  });
 
   championshipTeams.forEach((team, teamIndex) => {
     const teamForm = teams[teamIndex];
@@ -99,10 +100,12 @@ const RacingApp = () => {
           numberOfLaps={numberOfLaps}
           lapLength={lapLength}
           speed={speed}
+          numberOfDriversPerTeam={numberOfDriverPerTeam}
           onNumberOfRacingsChange={setNumberOfRacings}
           onNumberOfLapsChange={setNumberOfLaps}
           onLapLengthChange={setLapLength}
           onSpeedChange={setSpeed}
+          onNumberOfDriversPerTeamChange={setNumberOfDriversPerTeam}
           teams={teams}
           onTeamChange={handleTeamChange}
           onAddTeam={handleAddTeam}

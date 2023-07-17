@@ -65,29 +65,21 @@ const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Prop
                 <div className="col-1 text-end">
                     <i className="bi bi-trash-fill fs-5" onClick={() => onDelete(index)}></i>
                 </div>
-                <div className="col-6">
-                    <div className="text-center mb-2">
-                        <CarIcon color={ teamForm.color } />
-                    </div>
-                    <input 
-                        type="text"
-                        className="form-control bg-dark text-white"
-                        placeholder="Driver name"
-                        value={teamForm.drivers[0]}
-                        onChange={(e) => handleDriverChange(e, 0)}
-                    />
-                </div>
-                <div className="col-6">
-                    <div className="text-center mb-2">
-                    <CarIcon color={ teamForm.color } />
-                    </div>
-                    <input 
-                        type="text"
-                        className="form-control bg-dark text-white"
-                        placeholder="Driver name"
-                        value={teamForm.drivers[1]}
-                        onChange={(e) => handleDriverChange(e, 1)}
-                    />
+                <div className="drivers-form-container">
+                    { teamForm.drivers.map((driver, driverIndex) => (
+                        <div className="driver-form-container">
+                            <div className="text-center mb-2">
+                                <CarIcon color={ teamForm.color } />
+                            </div>
+                            <input 
+                                type="text"
+                                className="form-control bg-dark text-white"
+                                placeholder="Driver name"
+                                value={driver}
+                                onChange={(e) => handleDriverChange(e, driverIndex)}
+                            />
+                        </div>
+                    )) }
                 </div>
             </div>
         </div>

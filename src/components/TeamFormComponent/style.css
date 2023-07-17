@@ -2,6 +2,18 @@ input.form-control::placeholder {
     color: #CCC;
 }
 
-div.col-6 i {
+.drivers-form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.driver-form-container {
+    flex: 1;
+    min-width: 120px;
+}
+
+.driver-form-container i {
     font-size: 2em;
 }
+
