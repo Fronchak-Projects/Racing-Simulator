@@ -1,5 +1,7 @@
 import TeamForm from "../../types/TeamForm";
 import TeamFormComponent from "../TeamFormComponent";
+import formula1Teams from '../../utils/TeamsData/formulaOneTeams';
+import europeTeams from '../../utils/TeamsData/europeTeams'
 import './style.css';
 
 type Props = {
@@ -14,7 +16,8 @@ type Props = {
     onSpeedChange: (nextSpeed: number) => void;
     onTeamChange: (nextTeam: TeamForm, index: number) => void;
     onAddTeam: () => void,
-    onRemoveTeam: (index: number) => void
+    onRemoveTeam: (index: number) => void,
+    setTeams: (nextTeams: Array<TeamForm>) => void
 }
 
 const AppConfig = ({ 
@@ -23,7 +26,8 @@ const AppConfig = ({
         lapLength, onLapLengthChange,
         speed, onSpeedChange,
         teams, onTeamChange,
-        onAddTeam, onRemoveTeam
+        onAddTeam, onRemoveTeam,
+        setTeams
     }: Props) => {
     
     const handleNumberOfRacingsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,9 +140,18 @@ const AppConfig = ({
                 </div>
             </div>
             <h2 className="mb-3">Configure the teams</h2>
+            <div className="mb-3">
+                <button className="btn btn-primary me-2"
+                    onClick={() => setTeams(formula1Teams)}
+                >Use F1 teams</button>
+                <button className="btn btn-primary me-2">Use BR Football teams</button>
+                <button className="btn btn-primary me-2"
+                    onClick={() => setTeams(europeTeams)}
+                >Use EU Football teams</button>
+            </div>
             <div className="row g-3">
                 { teams.map((team, index) => (
-                    <div className="col-6 col-md-3">
+                    <div className="col-6 col-md-3" key={index}>
                         <TeamFormComponent 
                             teamForm={team}
                             index={index}

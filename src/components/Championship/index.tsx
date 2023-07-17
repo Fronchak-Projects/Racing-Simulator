@@ -43,9 +43,10 @@ type ChampionshipTeamTable = {
 
 const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, systemPoints }: Props) => {
 
+    const refTeams = useRef<Array<Team>>(teams);
     const [status, setStatus] = useState<ChampionshipStatus>('RACING');
     const [racingNumber, setRacingNumber] = useState<number>(1);
-    const [championshipTeams, setChampionShipTeams] = useState<Array<ChampionshipTeam>>(() => teams
+    const [championshipTeams, setChampionShipTeams] = useState<Array<ChampionshipTeam>>(() => refTeams.current
         .map((team) => ({
             team: team,
             championshipDrivers: team.drivers.map((driver) => ({
@@ -59,7 +60,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
     const refNumberOfLaps = useRef<number>(numberOfLaps);
     const refLapLength = useRef<number>(lapLength);
     const refSpeed = useRef<number>(speed);
-
+    
     const handleRacingResults = (points: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => {
         const nextChampionshipTeams: Array<ChampionshipTeam> = championshipTeams.map((championshipTeam) => {
             const racingPosition = teamsClassifications.find((teamClassificatio) => teamClassificatio.team.id === championshipTeam.team.id)?.racingPosition as number;
@@ -101,7 +102,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
             }
         }).sort(compareDrivers);
 
-        const teamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
+        const teamsTable: Array<ChampionshipTeamTable> = refTeams.current.map((team) => {
             const teamDrivers: Array<ChampionshipDriverTable> = drivers.filter((driver) => driver.driver.team.id === team.id);
             const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
             const racingPositions: Array<number> = championshipTeams.find((c) => c.team.id === team.id)!.racingPositions;
@@ -134,7 +135,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
                 }
             }).sort(compareDrivers);
 
-            const prevTeamsTable: Array<ChampionshipTeamTable> = teams.map((team) => {
+            const prevTeamsTable: Array<ChampionshipTeamTable> = refTeams.current.map((team) => {
                 const teamDrivers: Array<ChampionshipDriverTable> = prevDriver.filter((driver) => driver.driver.team.id === team.id);
                 const points = teamDrivers.reduce((prev, curr) => prev + curr.points, 0);
                 const racingPositions: Array<number> = championshipTeams.find((c) => c.team.id === team.id)!.racingPositions;
@@ -252,7 +253,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
     return <>
         { status === 'NOT_STARTED' && (
             <>
-                <TeamCardsContainer teams={teams} />
+                <TeamCardsContainer teams={refTeams.current} />
                 <hr />
             </>      
         ) }
@@ -264,7 +265,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
                     numberOfLaps={refNumberOfLaps.current}
                     speed={refSpeed.current}
                     systemPoints={systemPoints}
-                    teams={[...teams]}
+                    teams={refTeams.current}
                     setRacingResulst={handleRacingResults}
                 />
             </>
@@ -272,7 +273,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
         { (status === 'SUMMARY' || status === 'FINISHED') && (
             <>
                 
-                <TeamCardsContainer teams={teams} />    
+                <TeamCardsContainer teams={refTeams.current} />    
                 <hr />
                 { status === 'SUMMARY' ? 
                     <h1 className="mb-3">Championship Classification - Racings {racingNumber}/{refNumberOfRacings.current}</h1>
