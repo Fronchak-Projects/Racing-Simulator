@@ -97,7 +97,7 @@ const RacingApp = () => {
     const teamForm = teams[teamIndex];
     team.drivers = teamForm.drivers.map((driverName, driverIndex) => {
       return  {
-        id: teamIndex * 2 + driverIndex + 1,
+        id: teamIndex * numberOfDriverPerTeam + driverIndex + 1,
         name: driverName,
         team: team
       }
@@ -139,7 +139,6 @@ const RacingApp = () => {
             numberOfLaps={numberOfLaps} 
             speed={speed}
             teams={championshipTeams}
-            //teams={[mercedes, rbr, ferrari, mcLaren, alfaRomeo, alphaTauri, alpine, williams, astonMartin, haas]}
             systemPoints={[25, 18, 15, 12, 10, 8, 6, 4, 2, 1]}  
           />
         </div>
