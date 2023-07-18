@@ -1,7 +1,8 @@
 import TeamForm from "../../types/TeamForm";
 import TeamFormComponent from "../TeamFormComponent";
 import formula1Teams from '../../utils/TeamsData/formulaOneTeams';
-import europeTeams from '../../utils/TeamsData/europeTeams'
+import europeTeams from '../../utils/TeamsData/europeTeams';
+import brazilTeams from '../../utils/TeamsData/brazilTeams';
 import './style.css';
 
 type Props = {
@@ -66,6 +67,16 @@ const AppConfig = ({
         if(!Number.isNaN(nextNumberOfDriversPerTeam) && nextNumberOfDriversPerTeam >= 1) {
             onNumberOfDriversPerTeamChange(nextNumberOfDriversPerTeam);
         }
+    }
+
+    const setBrazilTeams = () => {
+        onNumberOfDriversPerTeamChange(1);
+        setTeams(brazilTeams)
+    }
+
+    const setFormulaOneTeams = () => {
+        onNumberOfDriversPerTeamChange(2);
+        setTeams(formula1Teams)
     }
 
     return (
@@ -173,9 +184,11 @@ const AppConfig = ({
             <h2 className="mb-3">Configure the teams</h2>
             <div className="mb-3">
                 <button className="btn btn-primary me-2"
-                    onClick={() => setTeams(formula1Teams)}
+                    onClick={setFormulaOneTeams}
                 >Use F1 teams</button>
-                <button className="btn btn-primary me-2">Use BR Football teams</button>
+                <button className="btn btn-primary me-2"
+                    onClick={setBrazilTeams}
+                >Use BR Football teams</button>
                 <button className="btn btn-primary me-2"
                     onClick={() => setTeams(europeTeams)}
                 >Use EU Football teams</button>
