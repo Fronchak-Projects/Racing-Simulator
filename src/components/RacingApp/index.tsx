@@ -25,6 +25,8 @@ const RacingApp = () => {
     }
   ]);
 
+  const isOneDriverPerTeam: boolean = numberOfDriverPerTeam === 1;
+
   const handleStartClick = () => {
     setStatus('STARTED');
     setShowConfig(false);
@@ -59,12 +61,14 @@ const RacingApp = () => {
   }
 
   const handleRemoveTeam = (index: number) => {
-    setTeams((prevState) => {
-      return [
-        ...prevState.slice(0, index),
-        ...prevState.slice(index + 1)
-      ]
-    })
+    if(teams.length > 1) {
+      setTeams((prevState) => {
+        return [
+          ...prevState.slice(0, index),
+          ...prevState.slice(index + 1)
+        ]
+      })
+    }
   }
 
   const handleNumberOfDriversPerTeamChange = (nextNumberOfDriversPerTeam: number) => {
@@ -98,7 +102,7 @@ const RacingApp = () => {
     team.drivers = teamForm.drivers.map((driverName, driverIndex) => {
       return  {
         id: teamIndex * numberOfDriverPerTeam + driverIndex + 1,
-        name: driverName,
+        name: isOneDriverPerTeam ? team.name : driverName,
         team: team
       }
     })

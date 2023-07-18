@@ -60,6 +60,7 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
     const refNumberOfLaps = useRef<number>(numberOfLaps);
     const refLapLength = useRef<number>(lapLength);
     const refSpeed = useRef<number>(speed);
+    const isOneDriverPerTeam: boolean = teams[0].drivers.length === 1 ?? false;
     
     const handleRacingResults = (points: Array<RacingPoints>, teamsClassifications: Array<TeamRacingClassification>) => {
         const nextChampionshipTeams: Array<ChampionshipTeam> = championshipTeams.map((championshipTeam) => {
@@ -163,10 +164,10 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-12 col-lg-6">
-                        <TableTitle title='Drivers' />
+                    <div className={ isOneDriverPerTeam ? 'col-12' : "col-12 col-lg-6" }>
+                        <TableTitle title='Teams' />
                         <ChampionshipTable 
-                            descriptionHeader="Driver"
+                            descriptionHeader="Team"
                             showThophyIcon={ status === 'FINISHED' }
                             rows={ drivers.map((driver) => ({
                                 points: driver.points,
@@ -183,26 +184,28 @@ const Championship = ({ numberOfRacings, numberOfLaps, lapLength, speed, teams, 
                             })) }
                         />
                     </div>
-                    <div className="col-12 col-lg-6">
-                        <TableTitle title='Teams' />
-                        <ChampionshipTable 
-                            descriptionHeader="Team"
-                            showThophyIcon={ status === 'FINISHED' }
-                            rows={teamsTable.map((team) => ({
-                                points: team.points,
-                                firstPlaces: team.numberOfFirstPlaces,
-                                secondPlaces: team.numberOfSecondPlaces,
-                                thirdPlaces: team.numberOfThirdPlaces,
-                                situation: team.situation,
-                                description: <span 
-                                    style={{
-                                        color: team.team.color
-                                    }}
-                                >{ team.team.name }
-                                </span>
-                            }))}
-                        />
-                    </div>
+                    { !isOneDriverPerTeam && (
+                        <div className="col-12 col-lg-6">
+                            <TableTitle title='Teams' />
+                            <ChampionshipTable 
+                                descriptionHeader="Team"
+                                showThophyIcon={ status === 'FINISHED' }
+                                rows={teamsTable.map((team) => ({
+                                    points: team.points,
+                                    firstPlaces: team.numberOfFirstPlaces,
+                                    secondPlaces: team.numberOfSecondPlaces,
+                                    thirdPlaces: team.numberOfThirdPlaces,
+                                    situation: team.situation,
+                                    description: <span 
+                                        style={{
+                                            color: team.team.color
+                                        }}
+                                    >{ team.team.name }
+                                    </span>
+                                }))}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         )

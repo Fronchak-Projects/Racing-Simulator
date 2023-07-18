@@ -41,6 +41,7 @@ const Racing = ({ numberOfLaps, lapSize, speed, teams, systemPoints, setRacingRe
     const speedWayLength = lapSize * numberOfLaps;
     const someoneFinished = racingDrivers.some((racingDriver) => racingDriver.position > speedWayLength);
     const hasFinished = racingDrivers.every((racingDriver) => racingDriver.position > speedWayLength);
+    const isOneDriverPerTeam = teams[0].drivers.length === 1 ?? false;
 
     useEffect(() => {
         ciclo.current = setInterval(() => {
@@ -142,10 +143,10 @@ const Racing = ({ numberOfLaps, lapSize, speed, teams, systemPoints, setRacingRe
             { someoneFinished && (
                 <div className="container-fluid">
                     <div className='row'>
-                        <div className={hasFinished ? 'col-12 col-lg-6' : 'col-12'}>
-                            <TableTitle title='Drivers' />
+                        <div className={hasFinished && !isOneDriverPerTeam ? 'col-12 col-lg-6' : 'col-12'}>
+                            <TableTitle title={ isOneDriverPerTeam ? 'Teams' : 'Drivers' } />
                             <ClassificationTable 
-                                descriptionHeader='Driver'
+                                descriptionHeader={ isOneDriverPerTeam ? 'Team' : 'Driver' }
                                 classificationItens={
                                     racingDrivers.filter((racingDriver) => racingDriver.position > speedWayLength)
                                     .map((racingDriver) => ({
@@ -163,7 +164,7 @@ const Racing = ({ numberOfLaps, lapSize, speed, teams, systemPoints, setRacingRe
                                 }
                             />
                         </div>
-                        { hasFinished && <div className="col-12 col-lg-6 mt-3 mt-lg-0">
+                        { !isOneDriverPerTeam && hasFinished && <div className="col-12 col-lg-6 mt-3 mt-lg-0">
                             <TableTitle title='Teams' />
                             <ClassificationTable 
                                 descriptionHeader='Team'

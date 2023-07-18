@@ -11,6 +11,8 @@ type Props = {
 
 const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Props) => {
     
+    const isOneDriverPerTeam: boolean = teamForm.drivers.length === 1; 
+
     const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const nextTeamForm: TeamForm = {
             ...teamForm,
@@ -65,23 +67,30 @@ const TeamFormComponent = ({ teamForm, index, onTeamFormChange, onDelete }: Prop
                 <div className="col-1 text-end">
                     <i className="bi bi-trash-fill fs-5" onClick={() => onDelete(index)}></i>
                 </div>
-                <div className="drivers-form-container">
-                    { teamForm.drivers.map((driver, driverIndex) => (
-                        <div className="driver-form-container" key={driverIndex}>
-                            <div className="text-center mb-2">
-                                <CarIcon color={ teamForm.color } />
+                { !isOneDriverPerTeam && (
+                    <div className="drivers-form-container">
+                        { teamForm.drivers.map((driver, driverIndex) => (
+                            <div className="driver-form-container" key={driverIndex}>
+                                <div className="text-center mb-2 car-icon-container">
+                                    <CarIcon color={ teamForm.color } />
+                                </div>
+                                <input 
+                                    type="text"
+                                    className="form-control bg-dark text-white"
+                                    placeholder="Driver name"
+                                    value={driver}
+                                    onChange={(e) => handleDriverChange(e, driverIndex)}
+                                />
                             </div>
-                            <input 
-                                type="text"
-                                className="form-control bg-dark text-white"
-                                placeholder="Driver name"
-                                value={driver}
-                                onChange={(e) => handleDriverChange(e, driverIndex)}
-                            />
-                        </div>
-                    )) }
-                </div>
+                        )) }
+                    </div>
+                ) }
             </div>
+            { isOneDriverPerTeam && (
+                <div className="text-center mt-3 car-icon-container">
+                    <CarIcon color={ teamForm.color } />
+                </div>
+            ) }
         </div>
     );
 }
