@@ -1,4 +1,4 @@
-# Campo Minado
+# Racing Simulator
 
 This project simulate a racing championship and was develop using React and Typescript
 
